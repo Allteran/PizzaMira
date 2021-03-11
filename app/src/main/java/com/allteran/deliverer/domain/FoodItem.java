@@ -4,10 +4,20 @@ public class FoodItem {
     private String id;
     private String name;
     private String description;
+    private String weight;
     private int price;
     private FoodCategory category;
+    private String thumbSrc;
 
     public FoodItem() {
+    }
+
+    public String getThumbSrc() {
+        return thumbSrc;
+    }
+
+    public void setThumbSrc(String thumbSrc) {
+        this.thumbSrc = thumbSrc;
     }
 
     public String getId() {
@@ -48,5 +58,13 @@ public class FoodItem {
 
     public void setCategory(FoodCategory category) {
         this.category = category;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
     }
 }

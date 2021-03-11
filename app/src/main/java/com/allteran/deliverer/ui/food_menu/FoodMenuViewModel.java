@@ -1,14 +1,13 @@
-package com.allteran.deliverer.ui.dashboard;
+package com.allteran.deliverer.ui.food_menu;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
-
+public class FoodMenuViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
-    public DashboardViewModel() {
+    public FoodMenuViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is dashboard fragment");
     }

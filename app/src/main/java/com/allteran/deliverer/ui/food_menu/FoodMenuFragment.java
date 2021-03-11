@@ -1,4 +1,4 @@
-package com.allteran.deliverer.ui.dashboard;
+package com.allteran.deliverer.ui.food_menu;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,15 +14,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.allteran.deliverer.R;
 
-public class DashboardFragment extends Fragment {
+public class FoodMenuFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
+    private FoodMenuViewModel dashboardViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+                new ViewModelProvider(this).get(FoodMenuViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_food_menu, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
