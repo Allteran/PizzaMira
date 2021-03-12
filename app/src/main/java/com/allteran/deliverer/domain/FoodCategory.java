@@ -4,6 +4,11 @@ public class FoodCategory {
     private String id;
     private String name;
 
+    public FoodCategory(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public FoodCategory() {
     }
 

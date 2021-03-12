@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.allteran.deliverer.R;
 import com.allteran.deliverer.domain.FoodItem;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.ViewHolder> implements View.OnClickListener {
@@ -48,7 +50,7 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
         //TODO: here should be all logic
         FoodItem foodItem = mFoodList.get(position);
         holder.name.setText(foodItem.getName());
-        holder.foodWeight.setText(foodItem.getWeight());
+        holder.foodWeight.setText(String.valueOf(foodItem.getWeight()));
         holder.price.setText(foodItem.getPrice() + " р."); //TODO: in future replace "p." with string from res placeholder
         //TODO: REPLACE PIC DOWNLOAD WITH PICASSO
         holder.thumb.setImageResource(R.drawable.ic_launcher_foreground);
@@ -90,7 +92,7 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
             super(itemView);
             thumb = itemView.findViewById(R.id.food_item_thumb);
             name = itemView.findViewById(R.id.food_item_name);
-            foodWeight = itemView.findViewById(R.id.food_item_weight);
+            foodWeight = (TextView) itemView.findViewById(R.id.item_weight);
             price = itemView.findViewById(R.id.food_item_price);
             textContainer = itemView.findViewById(R.id.food_item_text_container);
         }

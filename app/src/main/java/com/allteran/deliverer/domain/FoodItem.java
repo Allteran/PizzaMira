@@ -4,12 +4,22 @@ public class FoodItem {
     private String id;
     private String name;
     private String description;
-    private String weight;
+    private int weight;
     private int price;
     private FoodCategory category;
     private String thumbSrc;
 
     public FoodItem() {
+    }
+
+    public FoodItem(String id, String name, String description, int weight, int price, FoodCategory category, String thumbSrc) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.weight = weight;
+        this.price = price;
+        this.category = category;
+        this.thumbSrc = thumbSrc;
     }
 
     public String getThumbSrc() {
@@ -60,11 +70,11 @@ public class FoodItem {
         this.category = category;
     }
 
-    public String getWeight() {
+    public int getWeight() {
         return weight;
     }
 
-    public void setWeight(String weight) {
+    public void setWeight(int weight) {
         this.weight = weight;
     }
 }
