@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.allteran.deliverer.R;
 import com.allteran.deliverer.domain.FoodItem;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -72,12 +69,14 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.food_item_thumb) {
-            //TODO: add food item to cart;
+        if (v.getId() == R.id.food_item_thumb || v.getId() == R.id.food_item_name ||
+                v.getId() == R.id.food_item_weight) {
+            //TODO: open foodItem details
             return;
         }
-        if (v.getId() == R.id.food_item_text_container) {
-            //TODO: open foodItem details
+        if (v.getId() == R.id.food_item_price) {
+            //TODO: ADD FOOD ITEM TO CART
+            notifyDataSetChanged();
         }
     }
 
@@ -92,7 +91,7 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
             super(itemView);
             thumb = itemView.findViewById(R.id.food_item_thumb);
             name = itemView.findViewById(R.id.food_item_name);
-            foodWeight = (TextView) itemView.findViewById(R.id.item_weight);
+            foodWeight = (TextView) itemView.findViewById(R.id.food_item_weight);
             price = itemView.findViewById(R.id.food_item_price);
             textContainer = itemView.findViewById(R.id.food_item_text_container);
         }

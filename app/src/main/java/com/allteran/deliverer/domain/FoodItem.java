@@ -8,6 +8,7 @@ public class FoodItem {
     private int price;
     private FoodCategory category;
     private String thumbSrc;
+    private int countInCart;
 
     public FoodItem() {
     }
@@ -76,5 +77,13 @@ public class FoodItem {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public int getCountInCart() {
+        return countInCart;
+    }
+
+    public void setCountInCart(int countInCart) {
+        this.countInCart = countInCart;
     }
 }
