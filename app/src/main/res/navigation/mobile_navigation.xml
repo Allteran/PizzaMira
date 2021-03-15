@@ -21,11 +21,6 @@
         android:name="com.allteran.deliverer.ui.cart.CartFragment"
         android:label="@string/nav_title_cart"
         tools:layout="@layout/fragment_cart" />
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.allteran.deliverer.ui.notifications.NotificationsFragment"
-        android:label="@string/nav_title_notifications"
-        tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_account"

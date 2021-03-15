@@ -48,18 +48,18 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
         FoodItem foodItem = mFoodList.get(position);
         holder.name.setText(foodItem.getName());
         holder.foodWeight.setText(String.valueOf(foodItem.getWeight()));
-        holder.price.setText(foodItem.getPrice() + " р."); //TODO: in future replace "p." with string from res placeholder
+        holder.price.setText("+" + String.valueOf(foodItem.getPrice()) + " р."); //TODO: in future replace "p." with string from res placeholder
         //TODO: REPLACE PIC DOWNLOAD WITH PICASSO
-        holder.thumb.setImageResource(R.drawable.ic_launcher_foreground);
+        holder.foodImg.setImageResource(R.drawable.ic_launcher_foreground);
         int imageHeight = mScreenSize.y / 5;
         int imageWidth = mScreenSize.x / 2;
 
-        holder.thumb.requestLayout();
-        holder.thumb.getLayoutParams().height = imageHeight;
-        holder.thumb.getLayoutParams().width = imageWidth;
+        holder.foodImg.requestLayout();
+        holder.foodImg.getLayoutParams().height = imageHeight;
+        holder.foodImg.getLayoutParams().width = imageWidth;
 
         holder.textContainer.setOnClickListener(this);
-        holder.thumb.setOnClickListener(this);
+        holder.foodImg.setOnClickListener(this);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView thumb;
+        private ImageView foodImg;
         private TextView name;
         private TextView foodWeight;
         private TextView price;
@@ -89,7 +89,7 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            thumb = itemView.findViewById(R.id.food_item_thumb);
+            foodImg = itemView.findViewById(R.id.food_item_thumb);
             name = itemView.findViewById(R.id.food_item_name);
             foodWeight = (TextView) itemView.findViewById(R.id.food_item_weight);
             price = itemView.findViewById(R.id.food_item_price);
