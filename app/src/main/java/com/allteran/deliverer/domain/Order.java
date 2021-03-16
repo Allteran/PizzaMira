@@ -5,7 +5,11 @@ import com.allteran.deliverer.util.Const;
 import java.util.Date;
 import java.util.List;
 
-public class Order {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Order extends RealmObject {
+    @PrimaryKey
     private String id;
     private String userId;
     private List<FoodItem> foodList;
@@ -20,6 +24,7 @@ public class Order {
     private int floorNo; // number of floor
     private String userComment;
     private String operatorComment; // for emergency comment from operator
+    private int numberOfPersons;
 
     public Order() {
     }
@@ -139,5 +144,13 @@ public class Order {
 
     public void setOperatorComment(String operatorComment) {
         this.operatorComment = operatorComment;
+    }
+
+    public int getNumberOfPersons() {
+        return numberOfPersons;
+    }
+
+    public void setNumberOfPersons(int numberOfPersons) {
+        this.numberOfPersons = numberOfPersons;
     }
 }

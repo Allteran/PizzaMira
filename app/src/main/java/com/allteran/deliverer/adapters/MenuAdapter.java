@@ -17,17 +17,17 @@ import com.allteran.deliverer.domain.FoodItem;
 
 import java.util.List;
 
-public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.ViewHolder> implements View.OnClickListener {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> implements View.OnClickListener {
     private FragmentManager mFragmentManager;
     private RecyclerView mRecycler;
     private List<FoodItem> mFoodList;
     private Point mScreenSize;
 
-    public FoodItemsAdapter() {
+    public MenuAdapter() {
     }
 
-    public FoodItemsAdapter(FragmentManager fragmentManager, RecyclerView recyclerView,
-                            List<FoodItem> foodList, Point screenSize) {
+    public MenuAdapter(FragmentManager fragmentManager, RecyclerView recyclerView,
+                       List<FoodItem> foodList, Point screenSize) {
         this.mFragmentManager = fragmentManager;
         this.mRecycler = recyclerView;
         this.mFoodList = foodList;
@@ -37,7 +37,7 @@ public class FoodItemsAdapter extends RecyclerView.Adapter<FoodItemsAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_food_item, parent,
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_menu_food_item, parent,
                 false);
         return new ViewHolder(view);
     }

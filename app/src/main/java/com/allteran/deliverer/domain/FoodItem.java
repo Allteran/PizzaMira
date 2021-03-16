@@ -1,6 +1,8 @@
 package com.allteran.deliverer.domain;
 
-public class FoodItem {
+import io.realm.RealmObject;
+
+public class FoodItem extends RealmObject {
     private String id;
     private String name;
     private String description;

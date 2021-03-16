@@ -1,13 +1,11 @@
 package com.allteran.deliverer.ui.food_menu;
 
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.allteran.deliverer.R;
-import com.allteran.deliverer.adapters.FoodItemsAdapter;
+import com.allteran.deliverer.adapters.MenuAdapter;
 import com.allteran.deliverer.domain.FoodItem;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public class FoodMenuFragment extends Fragment {
     private FoodMenuViewModel mFoodMenuViewModel;
 
     private RecyclerView mRecycler;
-    private FoodItemsAdapter mFoodItemsAdapter;
+    private MenuAdapter mMenuAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,9 +64,9 @@ public class FoodMenuFragment extends Fragment {
             @Override
             public void onChanged(List<FoodItem> foodItems) {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                mFoodItemsAdapter = new FoodItemsAdapter(fm, mRecycler,
+                mMenuAdapter = new MenuAdapter(fm, mRecycler,
                         mFoodMenuViewModel.getFoodList().getValue(), screenSize);
-                mRecycler.setAdapter(mFoodItemsAdapter);
+                mRecycler.setAdapter(mMenuAdapter);
             }
         });
 
