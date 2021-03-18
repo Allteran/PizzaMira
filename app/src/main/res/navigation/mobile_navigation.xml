@@ -7,24 +7,24 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.allteran.deliverer.ui.home.HomeFragment"
+        android:name="com.allteran.pizzamira.ui.home.HomeFragment"
         android:label="@string/nav_title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_food_menu"
-        android:name="com.allteran.deliverer.ui.food_menu.FoodMenuFragment"
+        android:name="com.allteran.pizzamira.ui.food_menu.FoodMenuFragment"
         android:label="@string/nav_title_food_menu"
         tools:layout="@layout/fragment_food_menu" />
     <fragment
         android:id="@+id/navigation_cart"
-        android:name="com.allteran.deliverer.ui.cart.CartFragment"
+        android:name="com.allteran.pizzamira.ui.cart.CartFragment"
         android:label="@string/nav_title_cart"
         tools:layout="@layout/fragment_cart" />
 
     <fragment
         android:id="@+id/navigation_account"
-        android:name="com.allteran.deliverer.ui.account.AccountFragment"
+        android:name="com.allteran.pizzamira.ui.account.AccountFragment"
         android:label="@string/nav_title_account"
         tools:layout="@layout/fragment_account" />
 </navigation>
