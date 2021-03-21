@@ -1,4 +1,4 @@
-package com.allteran.pizzamira.activities;
+package com.allteran.pizzamira.ui;
 
 import android.os.Bundle;
 

@@ -7,6 +7,7 @@ import io.realm.annotations.PrimaryKey;
 public class User extends RealmObject {
     @PrimaryKey
     private String id;
+    private Role role;
     private String city;
     private String street;
     private String buildNo; //building number include number with slash or dash like '47/2\
@@ -80,5 +81,13 @@ public class User extends RealmObject {
 
     public void setCurrentOrder(Order currentOrder) {
         this.currentOrder = currentOrder;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
