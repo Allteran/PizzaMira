@@ -22,8 +22,8 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(getActivity(), LoginActivity.class);
+//        startActivity(intent);
         return root;
     }
 }
