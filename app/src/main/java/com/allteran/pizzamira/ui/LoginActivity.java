@@ -124,14 +124,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login_button) {
-            PhoneAuthOptions phoneOptions =
-                    PhoneAuthOptions.newBuilder(mAuth)
-                            .setPhoneNumber(mPhone.getText().toString())
-                            .setTimeout(60L, TimeUnit.SECONDS)
-                            .setActivity(this)
-                            .setCallbacks(mPhoneLoginCallbacks)
-                            .build();
-            PhoneAuthProvider.verifyPhoneNumber(phoneOptions);
+            sendVerificationCode(mPhone.getText().toString());
         }
+    }
+
+    private void sendVerificationCode (String phoneNumber) {
+        PhoneAuthOptions phoneOptions =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(phoneNumber)
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(this)
+                        .setCallbacks(mPhoneLoginCallbacks)
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(phoneOptions);
     }
 }
