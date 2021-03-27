@@ -19,5 +19,7 @@
     <string name="enter_another_phone"><u>Ввести другой номер телефона</u></string>
     <string name="enter_phone_label">Введите свой номер телефона</string>
     <string name="login_button">Войти</string>
+    <string name="resend_code"><u>Не получили код?</u></string>
+    <string name="enter_code_button">Продолжить</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

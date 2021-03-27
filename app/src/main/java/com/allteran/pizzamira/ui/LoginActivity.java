@@ -42,6 +42,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mCodeEditText;
     private TextView mPhoneLabel;
     private TextView mCodeLabel;
+    private TextView mResendCodeLabel;
+    private TextView mAnotherPhoneLabel;
 
     private AppCompatButton mLoginButton;
     private AppCompatButton mEnterCodeButton;
@@ -57,9 +59,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // 2 - Auto-retrieval. On some devices Google Play services can automatically
             //     detect the incoming verification SMS and perform verification without
             //     user action.
-            mPhoneLayout.setVisibility(View.GONE);
-            mCodeLayout.setVisibility(View.VISIBLE);
-
             Log.d(TAG, "onVerificationCompleted:" + phoneAuthCredential);
             String code = phoneAuthCredential.getSmsCode();
             if (code != null) {
@@ -94,8 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // by combining the code with a verification ID.
             super.onCodeSent(verificationId, token);
             Log.d(TAG, "onCodeSent:" + verificationId);
-            mPhoneLayout.setVisibility(View.GONE);
-            mCodeLayout.setVisibility(View.VISIBLE);
+            showCodeLayout();
 
             // Save verification ID and resending token so we can use them later
             mVerificationId = verificationId;
@@ -117,6 +115,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, task.getException().getMessage());
                             Log.d(TAG, "singInWithPhoneAuthCredentials task failed. See loglist below");
                             task.getException().printStackTrace();
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                mCodeEditText.setError("Неверный код");
+                                mCodeEditText.requestFocus();
+                                return;
+                            }
                         }
                     }
                 });
@@ -135,12 +138,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPhoneLabel = findViewById(R.id.user_phone_label);
         mCodeLabel = findViewById(R.id.user_code_label);
 
+        mResendCodeLabel = findViewById(R.id.resend_code_label);
+        mAnotherPhoneLabel = findViewById(R.id.enter_another_phone_label);
+
         mPhoneLayout = findViewById(R.id.phone_layout);
         mCodeLayout = findViewById(R.id.code_layout);
 
         mLoginButton = findViewById(R.id.login_button);
         mEnterCodeButton = findViewById(R.id.enter_code_button);
 
+        mResendCodeLabel.setOnClickListener(this);
+        mAnotherPhoneLabel.setOnClickListener(this);
         //let's make uneditable prefix for phone number
         mPhoneEditText.setText("+7");
         Selection.setSelection(mPhoneEditText.getText(), mPhoneEditText.getText().length());
@@ -170,20 +178,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         mLoginButton.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login_button) {
             sendVerificationCode(mPhoneEditText.getText().toString().trim());
+            showCodeLayout();
         }
         if (v.getId() == R.id.enter_code_button) {
+            //TODO: doesn't work, lol. FIX THIS
             if (mCodeEditText.getText().toString().trim().length() < 6) {
                 mCodeEditText.setError("Код состоит из 6-ти цифр");
                 mCodeEditText.requestFocus();
                 return;
             }
             signInWithPhoneAuthCredentials(mCodeEditText.getText().toString().trim());
+        }
+        if(v.getId() == R.id.enter_another_phone_label) {
+            showPhoneLayout();
+        }
+        if(v.getId() == R.id.resend_code_label) {
+            //TODO: end resending token. Better to use progress bar or some to display time to possible update
         }
     }
 
@@ -197,4 +214,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(phoneOptions);
     }
+
+    private void showCodeLayout() {
+        mPhoneLayout.setVisibility(View.GONE);
+        mCodeLayout.setVisibility(View.VISIBLE);
+        mCodeEditText.requestFocus();
+
+        mCodeLabel.setText("Введите код, что был выслан на номер " + mPhoneEditText.getText().toString().trim());
+    }
+
+    private void showPhoneLayout() {
+        mCodeLayout.setVisibility(View.GONE);
+        mPhoneLayout.setVisibility(View.VISIBLE);
+        mPhoneEditText.requestFocus();
+    }
+
 }
