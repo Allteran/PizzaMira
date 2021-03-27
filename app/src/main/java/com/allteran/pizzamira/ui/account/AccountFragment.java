@@ -2,6 +2,7 @@ package com.allteran.pizzamira.ui.account;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.allteran.pizzamira.R;
+import com.allteran.pizzamira.ui.LoginActivity;
 
 public class AccountFragment extends Fragment {
 
@@ -35,4 +37,10 @@ public class AccountFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+    }
 }
