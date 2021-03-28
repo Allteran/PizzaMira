@@ -60,13 +60,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //     detect the incoming verification SMS and perform verification without
             //     user action.
             Log.d(TAG, "onVerificationCompleted:" + phoneAuthCredential);
-            String code = phoneAuthCredential.getSmsCode();
-            if (code != null) {
-                mCodeEditText.setText(code);
-                signInWithPhoneAuthCredentials(code);
+            mCodeFromCredential = phoneAuthCredential.getSmsCode();
+            if (mCodeFromCredential != null) {
+                mCodeEditText.setText(mCodeFromCredential);
+                signInWithPhoneAuthCredentials(mCodeFromCredential);
             }
-//            signInWithPhoneAuthCredential(phoneAuthCredential);
-
         }
 
         @Override
@@ -100,14 +98,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mResendToken = token;
         }
     };
+    private String mCodeFromCredential;
 
     private void signInWithPhoneAuthCredentials(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+        Log.d(TAG, "trying to signin with phone auth");
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.d(TAG, "sign is successful, task is completed");
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -118,10 +119,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 mCodeEditText.setError("Неверный код");
                                 mCodeEditText.requestFocus();
-                                return;
                             }
                         }
                     }
+
+
                 });
     }
 
@@ -178,29 +180,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         mLoginButton.setOnClickListener(this);
-
+        mEnterCodeButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        Log.d(TAG, "onClick");
         if (v.getId() == R.id.login_button) {
+            Log.d(TAG, "clicked login button");
             sendVerificationCode(mPhoneEditText.getText().toString().trim());
             showCodeLayout();
         }
         if (v.getId() == R.id.enter_code_button) {
-            //TODO: doesn't work, lol. FIX THIS
+            Log.d(TAG, "enter_code_button pressed");
             if (mCodeEditText.getText().toString().trim().length() < 6) {
+                Log.d(TAG, "code length less than 6 digits");
                 mCodeEditText.setError("Код состоит из 6-ти цифр");
                 mCodeEditText.requestFocus();
                 return;
             }
-            signInWithPhoneAuthCredentials(mCodeEditText.getText().toString().trim());
+            Log.d(TAG, "code length is normal");
+            if (mCodeFromCredential == null) {
+                Log.d(TAG, "mCodeFromCredential is null");
+                signInWithPhoneAuthCredentials(mCodeEditText.getText().toString().trim());
+            }
         }
-        if(v.getId() == R.id.enter_another_phone_label) {
+        if (v.getId() == R.id.enter_another_phone_label) {
             showPhoneLayout();
         }
-        if(v.getId() == R.id.resend_code_label) {
-            //TODO: end resending token. Better to use progress bar or some to display time to possible update
+        if (v.getId() == R.id.resend_code_label) {
+            sendVerificationCode(mPhoneEditText.getText().toString().trim());
         }
     }
 

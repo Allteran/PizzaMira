@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.allteran.pizzamira.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import io.realm.Realm;
 

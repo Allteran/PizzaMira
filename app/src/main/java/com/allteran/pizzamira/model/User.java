@@ -1,22 +1,49 @@
 package com.allteran.pizzamira.model;
 
+import java.util.List;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class User extends RealmObject {
-    @PrimaryKey
+public class User  {
     private String id;
+    private String phone;
+    private String name;
     private Role role;
     private String city;
     private String street;
     private String buildNo; //building number include number with slash or dash like '47/2\
     private int appNo; // appartament number
     private int floorNo; // number of floor
-    private RealmList<String> orderHistoryIds; //it would save orders only with status 'PAID'
+    private List<String> orderHistoryIds; //it would save orders only with status 'PAID'
     private Order currentOrder;
 
     public User() {
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<String> getOrderHistoryIds() {
+        return orderHistoryIds;
+    }
+
+    public void setOrderHistoryIds(List<String> orderHistoryIds) {
+        this.orderHistoryIds = orderHistoryIds;
     }
 
     public String getId() {
@@ -67,11 +94,11 @@ public class User extends RealmObject {
         this.floorNo = floorNo;
     }
 
-    public RealmList<String> getOrderHistory() {
+    public List<String> getOrderHistory() {
         return orderHistoryIds;
     }
 
-    public void setOrderHistory(RealmList<String> orderHistory) {
+    public void setOrderHistory(List<String> orderHistory) {
         this.orderHistoryIds = orderHistory;
     }
 
