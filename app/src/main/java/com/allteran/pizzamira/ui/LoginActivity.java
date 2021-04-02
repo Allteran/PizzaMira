@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.allteran.pizzamira.R;
+import com.allteran.pizzamira.services.FirebaseHelper;
+import com.allteran.pizzamira.util.Const;
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +33,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,8 +43,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String TAG = "LOGIN_ACTIVITY";
     private FirebaseAuth mAuth;
 
+    private FirebaseHelper mFirebaseHelper;
+
     private ConstraintLayout mPhoneLayout;
     private ConstraintLayout mCodeLayout;
+    private ProgressBar mProgressBar;
 
     private EditText mPhoneEditText;
     private EditText mCodeEditText;
@@ -65,7 +74,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mCodeFromCredential = phoneAuthCredential.getSmsCode();
             if (mCodeFromCredential != null) {
                 mCodeEditText.setText(mCodeFromCredential);
-                signInWithPhoneAuthCredentials(mCodeFromCredential);
             }
         }
 
@@ -103,29 +111,58 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String mCodeFromCredential;
 
     private void signInWithPhoneAuthCredentials(String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "sign is successful, task is completed");
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        } else {
-                            Log.d(TAG, task.getException().getMessage());
-                            Log.d(TAG, "singInWithPhoneAuthCredentials task failed. See loglist below");
-                            task.getException().printStackTrace();
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                mCodeEditText.setError("Неверный код");
-                                mCodeEditText.requestFocus();
+        try {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "signin: task is successful");
+                                FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+                                assert fUser != null;
+
+                                mCodeLayout.setVisibility(View.GONE);
+                                mProgressBar.setVisibility(View.VISIBLE);
+
+                                //If it's first time when user going to login - we should add this user to database
+                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
+                                userRef.child(Const.DB_TREE_USERS).child(fUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            //Check if user already exist in database
+                                            //if doesnt - add one to database
+                                            if (!task.getResult().exists()) {
+                                                Log.d(TAG, "finduser: user not found, add new one");
+                                                mFirebaseHelper.addUser(fUser);
+                                            } else {
+                                                Log.d(TAG, "finduser: user exist, so we won't add it to db");
+                                            }
+                                            Log.d(TAG, "sign is successful, task is completed");
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            } else {
+                                Log.d(TAG, task.getException().getMessage());
+                                Log.d(TAG, "singInWithPhoneAuthCredentials task failed. See loglist below");
+                                task.getException().printStackTrace();
+                                if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                    mCodeEditText.setError("Неверный код");
+                                    mCodeEditText.requestFocus();
+                                }
                             }
                         }
-                    }
+                    });
+        } catch (Exception e) {
+            mCodeEditText.setError("Неверный код");
+            mCodeEditText.requestFocus();
+            e.printStackTrace();
+        }
 
-
-                });
     }
 
     @Override
@@ -134,6 +171,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        mFirebaseHelper = new FirebaseHelper(FirebaseDatabase.getInstance());
+
+        mProgressBar = findViewById(R.id.progress_bar);
 
         mPhoneEditText = findViewById(R.id.user_phone_input);
         mCodeEditText = findViewById(R.id.code_input);

@@ -58,10 +58,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             //User is logged in
-            Log.d(TAG, "User's phone " + firebaseUser.getPhoneNumber());
-            Log.d(TAG, "DisplayName " + firebaseUser.getDisplayName());
-            Log.d(TAG, "providerId " + firebaseUser.getProviderId());
-            Log.d(TAG, "UID " + firebaseUser.getUid());
         } else {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);

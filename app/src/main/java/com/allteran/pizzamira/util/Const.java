@@ -15,5 +15,7 @@ public final class Const {
     public static final String ORDER_STATUS_DELIVERED="Заказ доставлен";
     public static final String ORDER_STATUS_PAID="Оплачено";
 
+    public static final String DB_TREE_USERS = "users";
+
 
 }
