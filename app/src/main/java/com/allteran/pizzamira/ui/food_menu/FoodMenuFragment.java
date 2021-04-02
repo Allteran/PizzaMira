@@ -6,6 +6,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,14 +20,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.adapters.MenuAdapter;
 import com.allteran.pizzamira.model.FoodItem;
+import com.allteran.pizzamira.services.FirebaseService;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
+//TODO: WARNING! This fragment doesn't implement ViewModel Pattern to display data. So you have to implement ViewModel
+//TODO: or implement creating fragment with newInstance
+
 public class FoodMenuFragment extends Fragment {
 
+    private FirebaseService mDatabaseService;
+
     private FoodMenuViewModel mFoodMenuViewModel;
+    private List<FoodItem> mFoodList;
 
     private RecyclerView mRecycler;
+    private ProgressBar mProgressBar;
+
     private MenuAdapter mMenuAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -41,7 +52,8 @@ public class FoodMenuFragment extends Fragment {
 //                textView.setText(s);
 //            }
 //        });
-        return inflater.inflate(R.layout.fragment_food_menu,container, false);
+        mDatabaseService = new FirebaseService(FirebaseDatabase.getInstance());
+        return inflater.inflate(R.layout.fragment_food_menu, container, false);
     }
 
     @Override
@@ -50,6 +62,9 @@ public class FoodMenuFragment extends Fragment {
         mFoodMenuViewModel = new ViewModelProvider(this).get(FoodMenuViewModel.class);
 
         mRecycler = view.findViewById(R.id.food_list_recycler);
+        mProgressBar = view.findViewById(R.id.progress_bar);
+
+        mProgressBar.setVisibility(View.VISIBLE);
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point screenSize = new Point();
@@ -58,20 +73,26 @@ public class FoodMenuFragment extends Fragment {
         //next lines mean that RecyclerView children (items) have fixed width and height
         //that allows RecyclerView to optimize by figuring out the exact parameters of entire list
         mRecycler.setHasFixedSize(true);
-        mRecycler.setLayoutManager(new GridLayoutManager(getContext(),2));
+        mRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        mMenuAdapter = new MenuAdapter(fm, mRecycler,
-                mFoodMenuViewModel.getFoodList().getValue(), screenSize);
-        mRecycler.setAdapter(mMenuAdapter);
 
-        mFoodMenuViewModel.getFoodList().observe(getViewLifecycleOwner(), new Observer<List<FoodItem>>() {
+
+
+        mDatabaseService.loadFoodList(new FirebaseService.DataStatus() {
             @Override
-            public void onChanged(List<FoodItem> foodItems) {
-                mMenuAdapter.refreshList(foodItems);
-                //use this when state can be changed
+            public void dataIsLoaded(List<FoodItem> foodList) {
+                mMenuAdapter = new MenuAdapter(fm, mRecycler,
+                        foodList, screenSize);
+                mRecycler.setAdapter(mMenuAdapter);
+                mProgressBar.setVisibility(View.GONE);
             }
         });
+
+//        mFoodMenuViewModel.getFoodList().observe(getViewLifecycleOwner(), foodItems -> {
+//            mMenuAdapter.refreshList(foodItems);
+//            mProgressBar.setVisibility(View.GONE);
+//        });
 
     }
 

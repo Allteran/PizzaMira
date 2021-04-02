@@ -1,29 +1,25 @@
 package com.allteran.pizzamira.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class FoodItem extends RealmObject {
-    @PrimaryKey
+public class FoodItem {
     private String id;
     private String name;
     private String description;
     private int weight;
     private int price;
-    private FoodCategory category;
+    private String categoryId;
     private String thumbSrc;
     private int countInCart;
 
     public FoodItem() {
     }
 
-    public FoodItem(String id, String name, String description, int weight, int price, FoodCategory category, String thumbSrc) {
+    public FoodItem(String id, String name, String description, int weight, int price, String categoryId, String thumbSrc) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.weight = weight;
         this.price = price;
-        this.category = category;
+        this.categoryId = categoryId;
         this.thumbSrc = thumbSrc;
     }
 
@@ -67,12 +63,12 @@ public class FoodItem extends RealmObject {
         this.price = price;
     }
 
-    public FoodCategory getCategory() {
-        return category;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(FoodCategory category) {
-        this.category = category;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public int getWeight() {

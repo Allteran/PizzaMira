@@ -9,11 +9,10 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Order extends RealmObject {
-    @PrimaryKey
+public class Order {
     private String id;
     private String userId;
-    private RealmList<FoodItem> foodList;
+    private List<FoodItem> foodList;
     private int fullPrice;
     private OrderStatus status;
     private String payType;
@@ -60,7 +59,7 @@ public class Order extends RealmObject {
         return foodList;
     }
 
-    public void setFoodList(RealmList<FoodItem> foodList) {
+    public void setFoodList(List<FoodItem> foodList) {
         this.foodList = foodList;
     }
 

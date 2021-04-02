@@ -18,4 +18,5 @@ public final class Const {
     public static final String DB_TREE_USERS = "users";
 
 
+    public static final String DB_TREE_FOODLIST_FAKE = "fake_food_list";
 }

@@ -19,9 +19,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.allteran.pizzamira.R;
-import com.allteran.pizzamira.services.FirebaseHelper;
+import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.util.Const;
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -43,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String TAG = "LOGIN_ACTIVITY";
     private FirebaseAuth mAuth;
 
-    private FirebaseHelper mFirebaseHelper;
+    private FirebaseService mDatabaseService;
 
     private ConstraintLayout mPhoneLayout;
     private ConstraintLayout mCodeLayout;
@@ -135,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             //if doesnt - add one to database
                                             if (!task.getResult().exists()) {
                                                 Log.d(TAG, "finduser: user not found, add new one");
-                                                mFirebaseHelper.addUser(fUser);
+                                                mDatabaseService.addUser(fUser);
                                             } else {
                                                 Log.d(TAG, "finduser: user exist, so we won't add it to db");
                                             }
@@ -171,7 +170,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-        mFirebaseHelper = new FirebaseHelper(FirebaseDatabase.getInstance());
+        mDatabaseService = new FirebaseService(FirebaseDatabase.getInstance());
 
         mProgressBar = findViewById(R.id.progress_bar);
 
