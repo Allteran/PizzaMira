@@ -2,47 +2,44 @@ package com.allteran.pizzamira.ui.food_menu;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.allteran.pizzamira.model.FoodItem;
+import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.util.Const;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FoodMenuViewModel extends ViewModel {
     private static final String TAG = "FOOD_MENU_VIEW_MODEL";
-    private MutableLiveData<String> mText;
     private MutableLiveData<List<FoodItem>> fakeFoodList;
-    private FirebaseService mDatabaseService;
 
     public FoodMenuViewModel() {
-        loadFakeData();
+        loadFoodList();
     }
 
-    private void loadFakeData() {
+    private void loadFoodList() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(Const.DB_TREE_FOODLIST_FAKE);
         final List<FoodItem>[] foodItems = new List[]{new ArrayList<>()};
 
-        mDatabaseService = new FirebaseService(FirebaseDatabase.getInstance());
+        FirebaseService mDatabaseService = new FirebaseService(FirebaseDatabase.getInstance());
 
        mDatabaseService.loadFoodList(new FirebaseService.DataStatus() {
            @Override
            public void dataIsLoaded(List<FoodItem> foodList) {
                foodItems[0] = foodList;
                Log.d(TAG, "dataIsLoaded");
+           }
+
+           @Override
+           public void dataIsLoaded(User user) {
+
            }
        });
 
@@ -69,7 +66,4 @@ public class FoodMenuViewModel extends ViewModel {
         return fakeFoodList;
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
 }

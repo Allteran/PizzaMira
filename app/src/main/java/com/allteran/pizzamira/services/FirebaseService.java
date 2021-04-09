@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.allteran.pizzamira.model.FoodItem;
+import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.util.Const;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,10 +24,13 @@ public class FirebaseService {
     private static final String TAG = "FIREBASE_HELPER";
 
     private DatabaseReference mReference;
-    private List<FoodItem> mFoodList = new ArrayList<>();
 
     public interface DataStatus {
-        void dataIsLoaded (List<FoodItem> foodList);
+        void dataIsLoaded(List<FoodItem> foodList);
+
+        void dataIsLoaded(User user);
+
+        void dataIsLoaded(Order order);
     }
 
     public FirebaseService(FirebaseDatabase database) {
@@ -37,7 +41,6 @@ public class FirebaseService {
      * Current method will be called only when user get's sign in for the first time, so it will fill user
      * only with two fields: phone and UUID, other fields will be updated after forming first order
      */
-    //TODO: test this and look how it will be displayed into database
     public void addUser(FirebaseUser firebaseUser) {
         Log.d(TAG, "ADDUSER: Going to add user to DB");
         Log.d(TAG, "ADDUSER: FirebaseUser's phone " + firebaseUser.getPhoneNumber());
@@ -48,36 +51,18 @@ public class FirebaseService {
         Log.d(TAG, "ADDUSER: user added");
     }
 
-    public void generateFakeFoodList() {
-        String pizzaCategory = "pzzctgr";
-
-        List<FoodItem> foodList = new ArrayList<>();
-        foodList.add(new FoodItem("MARGARITA", "Пицца маргарита", "Изысканная пицейка та тоненьком тесте", 350, 450, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("peanaple", "Пицца с ананасами", "Странная и хипповая пицца с курицей и ананасиком", 220, 650, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("diavollo", "Пицца дьяволо", "жгучая, как слова бывшей пицейка с охренительно острым соусом", 341, 540, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("vegan", "Вегетерианская пицца", "Легкая и ненавязчивая пицца без мяса, короче кулич с сыром", 320, 350, pizzaCategory, "NOTHUB"));
-        foodList.add(new FoodItem("id#5", "Пицца №5", "Ошеломительне описание новой пиццы под номером 5, у меня кончились идеи", 120, 320, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("id#6", "Пицца №6", "Ошеломительне описание новой пиццы под номером 6, у меня кончились идеи", 120, 320, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("id#7", "Пицца №7", "Ошеломительне описание новой пиццы под номером 7, у меня кончились идеи", 120, 320, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("id#8", "Пицца №8", "Ошеломительне описание новой пиццы под номером 8, у меня кончились идеи", 120, 320, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("id#9", "Пицца №9", "Ошеломительне описание новой пиццы под номером 9, у меня кончились идеи", 120, 320, pizzaCategory, "NOTHUMB"));
-        foodList.add(new FoodItem("id#10", "Пицца №10", "Ошеломительне описание новой пиццы под номером 10, у меня кончились идеи", 120, 320, pizzaCategory, "NOTHUMB"));
-
-        mReference.child(Const.DB_TREE_FOODLIST_FAKE).setValue(foodList);
-    }
-
     public void loadFoodList(final DataStatus dataStatus) {
-        mFoodList.clear();
+        List<FoodItem> foodList = new ArrayList<>();
         mReference.child(Const.DB_TREE_FOODLIST_FAKE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
+                if (snapshot.exists()) {
                     for (DataSnapshot childSnap : snapshot.getChildren()) {
                         FoodItem item = childSnap.getValue(FoodItem.class);
-                        mFoodList.add(item);
+                        foodList.add(item);
                     }
                 }
-                dataStatus.dataIsLoaded(mFoodList);
+                dataStatus.dataIsLoaded(foodList);
             }
 
             @Override
@@ -87,30 +72,65 @@ public class FirebaseService {
         });
     }
 
-    public void addFoodItemToCart(String userId, String foodItemId) {
+    public void loadCurrentOrder(String userId, String orderId, final DataStatus dataStatus) {
+        List<FoodItem> foodList = new ArrayList<>();
+        mReference.child(Const.DB_TREE_CART).child(userId).child(orderId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    for(DataSnapshot childSnap : snapshot.getChildren()) {
+                        FoodItem item = childSnap.getValue(FoodItem.class);
+                        foodList.add(item);
+                    }
+                    dataStatus.dataIsLoaded(foodList);
+                } else {
+                    Log.d(TAG, "loadcart: snapshot doesn't exist");
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "loadCart: onCanceled ", error.toException());
+            }
+        });
     }
 
-//    public User findUserById(String id) {
-//        Log.d(TAG, "FINDUSERBYID: 1. let's find user with id " + id);
-//        final DataSnapshot[] userSnapshot = new DataSnapshot[1];
-//        mReference.child(Const.DB_TREE_USERS).child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//    public void addFoodToOrder(String userId, FoodItem foodItem, Order order) {
+//        Log.d(TAG, "ADDITEMTOORDER: begin");
+//        order.getFoodListIds().add(foodItem.getId());
+//        mReference.child(Const.DB_TREE_CART).child(userId).setValue(order);
+//    }
+//
+//    public void pullCurrentOrder(String userId, final DataStatus dataStatus) {
+//        mReference.child(Const.DB_TREE_CART).child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                Log.d(TAG, "FINDUSERBYID: task");
-//                if (task.isSuccessful()) {
-//                    Log.d(TAG, "FINDUSERBYID: task is successful");
-//                    Log.d(TAG, task.getResult().toString());
-//                    userSnapshot[0] = task.getResult();
+//                if(task.isSuccessful()) {
+//                    if(task.getResult().exists()) {
+//                        Order order = task.getResult().getValue(Order.class);
+//                        dataStatus.dataIsLoaded(order);
+//                    } else {
+//                        Log.d(TAG, "pullCurrentOrder: there is no such order");
+//                    }
 //                } else {
-//                    Log.e(TAG, "FindUserById TASK FAILED", task.getException());
+//                    Log.d(TAG, "pullCurrentOrder: task was not successful", task.getException());
 //                }
 //            }
 //        });
-//        if(userSnapshot[0]==null) {
-//            Log.d(TAG, "FINDUSERBYID: usersnapshot[0] = null");
-//            return null;
-//        }
-//        return (User) userSnapshot[0].getValue();
 //    }
+
+    public void findUserById(String userId, final DataStatus dataStatus) {
+        mReference.child(Const.DB_TREE_USERS).child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()) {
+                    User user = task.getResult().getValue(User.class);
+                    dataStatus.dataIsLoaded(user);
+                } else {
+                    Log.e(TAG, "finduserById: task is failed", task.getException());
+                }
+            }
+        });
+    }
+
 }

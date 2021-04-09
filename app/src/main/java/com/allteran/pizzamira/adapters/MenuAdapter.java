@@ -1,5 +1,7 @@
 package com.allteran.pizzamira.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +16,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.FoodItem;
+import com.allteran.pizzamira.model.Order;
+import com.allteran.pizzamira.services.FirebaseService;
+import com.allteran.pizzamira.ui.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> implements View.OnClickListener {
     private FragmentManager mFragmentManager;
     private RecyclerView mRecycler;
-    private List<FoodItem> mFoodList;
     private Point mScreenSize;
+
+    private List<FoodItem> mFoodList;
+    private FirebaseService mDatabase;
+    private Order mOrder;
+
+    private int mPosition;
 
     public MenuAdapter() {
     }
@@ -32,6 +47,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
         this.mRecycler = recyclerView;
         this.mFoodList = foodList;
         this.mScreenSize = screenSize;
+        mDatabase = new FirebaseService(FirebaseDatabase.getInstance());
     }
 
     @NonNull
@@ -45,6 +61,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //TODO: here should be all logic
+        mPosition = position;
         FoodItem foodItem = mFoodList.get(position);
         holder.name.setText(foodItem.getName());
         holder.foodWeight.setText(String.valueOf(foodItem.getWeight()));
@@ -81,6 +98,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
         }
         if (v.getId() == R.id.food_item_price) {
             //TODO: ADD FOOD ITEM TO CART
+
             notifyDataSetChanged();
         }
     }

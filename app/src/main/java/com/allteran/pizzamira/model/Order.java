@@ -7,12 +7,11 @@ import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
-public class Order {
+public class Order extends RealmObject {
     private String id;
     private String userId;
-    private List<FoodItem> foodList;
+    private RealmList<String> foodListIds;
     private int fullPrice;
     private OrderStatus status;
     private String payType;
@@ -29,14 +28,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(String id, String userId, List<FoodItem> foodList, int fullPrice) {
+    public Order(String id, String userId, RealmList<String> foodListIds, int fullPrice) {
         this.id = id;
         this.userId = userId;
         this.fullPrice = fullPrice;
         this.status = new OrderStatus(Const.ID_ORDER_STATUS_NEW, Const.ORDER_STATUS_NEW);
         this.creationDate = new Date();
-        this.foodList = new RealmList<>();
-        this.foodList.addAll(foodList);
+        this.foodListIds = foodListIds;
     }
 
     public String getId() {
@@ -55,12 +53,12 @@ public class Order {
         this.userId = userId;
     }
 
-    public List<FoodItem> getFoodList() {
-        return foodList;
+    public RealmList<String> getFoodListIds() {
+        return foodListIds;
     }
 
-    public void setFoodList(List<FoodItem> foodList) {
-        this.foodList = foodList;
+    public void setFoodListIds(RealmList<String> foodListIds) {
+        this.foodListIds = foodListIds;
     }
 
     public int getFullPrice() {
