@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.allteran.pizzamira.model.FoodItem;
+import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.util.Const;
@@ -39,6 +40,11 @@ public class FoodMenuViewModel extends ViewModel {
 
            @Override
            public void dataIsLoaded(User user) {
+
+           }
+
+           @Override
+           public void dataIsLoaded(Order order) {
 
            }
        });

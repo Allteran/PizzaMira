@@ -72,25 +72,29 @@ public class FirebaseService {
         });
     }
 
-    public void loadCurrentOrder(String userId, String orderId, final DataStatus dataStatus) {
+    public void getFoodListByIds(List<String> foodListIds, final DataStatus dataStatus) {
         List<FoodItem> foodList = new ArrayList<>();
-        mReference.child(Const.DB_TREE_CART).child(userId).child(orderId).addValueEventListener(new ValueEventListener() {
+        mReference.child(Const.DB_TREE_FOODLIST_FAKE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    for(DataSnapshot childSnap : snapshot.getChildren()) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot childSnap : snapshot.getChildren()) {
                         FoodItem item = childSnap.getValue(FoodItem.class);
-                        foodList.add(item);
+                        for(String foodId : foodListIds) {
+                            if(foodId.equals(item.getId())) {
+                                foodList.add(item);
+                            }
+                        }
                     }
                     dataStatus.dataIsLoaded(foodList);
                 } else {
-                    Log.d(TAG, "loadcart: snapshot doesn't exist");
+                    Log.d(TAG, "loadFoodListByIds: snapshot doesn't exist");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "loadCart: onCanceled ", error.toException());
+                Log.e(TAG, "loadFoodListByIds: onCanceled ", error.toException());
             }
         });
     }
@@ -123,7 +127,7 @@ public class FirebaseService {
         mReference.child(Const.DB_TREE_USERS).child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     User user = task.getResult().getValue(User.class);
                     dataStatus.dataIsLoaded(user);
                 } else {

@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.FoodItem;
+import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.util.Const;
@@ -149,6 +150,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void dataIsLoaded(Order order) {
+
                                     }
                                 });
 //                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();

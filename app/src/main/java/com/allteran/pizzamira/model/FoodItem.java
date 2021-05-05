@@ -1,8 +1,10 @@
 package com.allteran.pizzamira.model;
 
-import io.realm.RealmObject;
+import io.realm.RealmModel;
+import io.realm.annotations.RealmClass;
 
-public class FoodItem extends RealmObject {
+@RealmClass
+public class FoodItem implements RealmModel {
     private String id;
     private String name;
     private String description;

@@ -1,7 +1,9 @@
 package com.allteran.pizzamira.services;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
 
 import org.bson.types.ObjectId;
@@ -15,30 +17,60 @@ import io.realm.RealmConfiguration;
  */
 
 public class RealmService {
+    private static final String TAG = "REALM_SERVICE";
 
 
-    public static void initRealm (Context context) {
+    public static void initRealm(Context context) {
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .allowQueriesOnUiThread(true)
                 .allowWritesOnUiThread(true)
                 .build();
-        Realm.init(context);
         Realm.setDefaultConfiguration(config);
+        Realm.init(context);
     }
 
     /**
-     * TODO: use findFirst for ORDER, when you will consider to create order
      * There is should be only ONE order in database, because when order will change status -
      * it will be deleted from database
      */
-    public void createOrder(Realm realm, Order order) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm iRealm) {
-                Order realmOrder = iRealm.createObject(Order.class);
-                realmOrder.setId(new ObjectId().toString().trim());
-                realmOrder.setFoodListIds(order.getFoodListIds());
-            }
+    public void createOrder(Realm realm) {
+        Order order = new Order();
+        realm.executeTransactionAsync(iRealm -> {
+            Log.d(TAG, "createOrder: execute");
+            Order realmOrder = iRealm.createObject(Order.class);
+            realmOrder.setId(new ObjectId().toString().trim());
+        }, () -> {
+            Log.d(TAG, "createOrder: onSuccess");
+        }, error -> {
+            Log.e(TAG, "createOrder: onError", error);
         });
     }
+
+    /**
+     * We should check if @return value is null. In that case we would create a new order. If value
+     * @return != null => we will pull it from database and work with it further
+     */
+    //TODO: ERROR: java.lang.IllegalArgumentException: Null objects cannot be copied from Realm
+    public Order getCurrentOrder(Realm realm) {
+        realm.beginTransaction();
+        Order order = realm.copyFromRealm(realm.where(Order.class)
+                .findFirst());
+        realm.commitTransaction();
+        return order;
+    }
+
+    public void addItemToOrder(Realm realm, FoodItem foodItem) {
+        realm.executeTransactionAsync(r -> {
+            Log.d(TAG, "addItemToOrder: execute");
+            Order order = r.where(Order.class).findFirst();
+            assert order != null;
+            order.getFoodListIds().add(foodItem.getId());
+        }, () -> {
+            Log.d(TAG, "addItemToOrder: execute");
+        }, error -> {
+            Log.e(TAG, "addItemToOrder: onError", error);
+        });
+    }
+
+
 }

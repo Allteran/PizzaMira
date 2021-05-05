@@ -2,6 +2,7 @@ package com.allteran.pizzamira.model;
 
 import com.allteran.pizzamira.util.Const;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,13 +29,13 @@ public class Order extends RealmObject {
     public Order() {
     }
 
-    public Order(String id, String userId, RealmList<String> foodListIds, int fullPrice) {
+    public Order(String id, String userId, int fullPrice) {
         this.id = id;
         this.userId = userId;
         this.fullPrice = fullPrice;
         this.status = new OrderStatus(Const.ID_ORDER_STATUS_NEW, Const.ORDER_STATUS_NEW);
         this.creationDate = new Date();
-        this.foodListIds = foodListIds;
+        this.foodListIds = new RealmList<>();
     }
 
     public String getId() {

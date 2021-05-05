@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.services.FirebaseService;
+import com.allteran.pizzamira.services.RealmService;
 import com.allteran.pizzamira.ui.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,14 +29,17 @@ import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
+import io.realm.Realm;
+
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> implements View.OnClickListener {
     private FragmentManager mFragmentManager;
     private RecyclerView mRecycler;
     private Point mScreenSize;
 
+    private RealmService mDatabase;
+    private Realm mRealm;
+
     private List<FoodItem> mFoodList;
-    private FirebaseService mDatabase;
-    private Order mOrder;
 
     private int mPosition;
 
@@ -47,7 +52,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
         this.mRecycler = recyclerView;
         this.mFoodList = foodList;
         this.mScreenSize = screenSize;
-        mDatabase = new FirebaseService(FirebaseDatabase.getInstance());
+        this.mDatabase = new RealmService();
     }
 
     @NonNull
@@ -60,7 +65,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //TODO: here should be all logic
         mPosition = position;
         FoodItem foodItem = mFoodList.get(position);
         holder.name.setText(foodItem.getName());
@@ -77,6 +81,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
 
         holder.textContainer.setOnClickListener(this);
         holder.foodImg.setOnClickListener(this);
+        holder.price.setOnClickListener(this);
     }
 
     @Override
@@ -97,8 +102,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
             return;
         }
         if (v.getId() == R.id.food_item_price) {
-            //TODO: ADD FOOD ITEM TO CART
-
+            mRealm = Realm.getDefaultInstance();
+            FoodItem item = mFoodList.get(mPosition);
+            Order order = mDatabase.getCurrentOrder(mRealm);
+            if (order == null) {
+                mDatabase.createOrder(mRealm);
+            }
+            mDatabase.addItemToOrder(mRealm, item);
             notifyDataSetChanged();
         }
     }
@@ -114,7 +124,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
             super(itemView);
             foodImg = itemView.findViewById(R.id.food_item_thumb);
             name = itemView.findViewById(R.id.food_item_name);
-            foodWeight = (TextView) itemView.findViewById(R.id.food_item_weight);
+            foodWeight = itemView.findViewById(R.id.food_item_weight);
             price = itemView.findViewById(R.id.food_item_price);
             textContainer = itemView.findViewById(R.id.food_item_text_container);
         }
