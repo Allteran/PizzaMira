@@ -11,7 +11,6 @@ public class PizzaMiraApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         Realm.init(this);
     }
 }

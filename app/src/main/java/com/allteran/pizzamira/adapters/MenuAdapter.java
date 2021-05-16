@@ -3,6 +3,7 @@ package com.allteran.pizzamira.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -32,22 +34,25 @@ import java.util.UUID;
 import io.realm.Realm;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> implements View.OnClickListener {
+    private static final String TAG = "MENU_ADAPTER";
     private FragmentManager mFragmentManager;
     private RecyclerView mRecycler;
     private Point mScreenSize;
+    private Context mContext;
+
+    private int mPosition;
 
     private RealmService mDatabase;
     private Realm mRealm;
 
     private List<FoodItem> mFoodList;
 
-    private int mPosition;
-
     public MenuAdapter() {
     }
 
-    public MenuAdapter(FragmentManager fragmentManager, RecyclerView recyclerView,
+    public MenuAdapter(Context context, FragmentManager fragmentManager, RecyclerView recyclerView,
                        List<FoodItem> foodList, Point screenSize) {
+        this.mContext = context;
         this.mFragmentManager = fragmentManager;
         this.mRecycler = recyclerView;
         this.mFoodList = foodList;
@@ -65,7 +70,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        mPosition = position;
         FoodItem foodItem = mFoodList.get(position);
         holder.name.setText(foodItem.getName());
         holder.foodWeight.setText(String.valueOf(foodItem.getWeight()));
@@ -96,17 +100,43 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.food_item_thumb || v.getId() == R.id.food_item_name ||
-                v.getId() == R.id.food_item_weight) {
+        //TODO: find way to get mRecycler child position
+        if (v.getId() == R.id.food_item_thumb) {
+            View rootView = (View) v
+                    .getParent() // ConstraintLayout
+                    .getParent() // LinearLayout
+                    .getParent(); // CardView
+            int position = mRecycler.getChildLayoutPosition(rootView);
+            Log.d(TAG, "mPosition = " + position);
+            Log.d(TAG, "item.getName = " + mFoodList.get(position).getName());
             //TODO: open foodItem details
             return;
         }
+        if (v.getId() == R.id.food_item_name) {
+            View rootView = (View) v
+                    .getParent() // ConstraintLayout
+                    .getParent() // Linear
+                    .getParent() // Linear
+                    .getParent(); // CardView
+            int position = mRecycler.getChildLayoutPosition(rootView);
+            Log.d(TAG, "position = " + position);
+            Log.d(TAG, "item.getName = " + mFoodList.get(position).getName());
+            //TODO: open foodItem details
+        }
         if (v.getId() == R.id.food_item_price) {
             mRealm = Realm.getDefaultInstance();
-            FoodItem item = mFoodList.get(mPosition);
+            View rootView = (View) v
+                    .getParent() // ConstraintLayout
+                    .getParent() // RelativeLayout
+                    .getParent() // Linear
+                    .getParent() // Linear
+                    .getParent(); //cardView
+            int position = mRecycler.getChildLayoutPosition(rootView);
+
+            FoodItem item = mFoodList.get(position);
             Order order = mDatabase.getCurrentOrder(mRealm);
             if (order == null) {
-                mDatabase.createOrder(mRealm);
+                mDatabase.createOrder(mRealm, item);
             }
             mDatabase.addItemToOrder(mRealm, item);
             notifyDataSetChanged();
@@ -120,6 +150,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
         private TextView price;
         private LinearLayout textContainer;
 
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             foodImg = itemView.findViewById(R.id.food_item_thumb);
@@ -128,5 +159,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
             price = itemView.findViewById(R.id.food_item_price);
             textContainer = itemView.findViewById(R.id.food_item_text_container);
         }
+
+
     }
 }

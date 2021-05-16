@@ -83,7 +83,7 @@ public class FoodMenuFragment extends Fragment {
         mDatabaseService.loadFoodList(new FirebaseService.DataStatus() {
             @Override
             public void dataIsLoaded(List<FoodItem> foodList) {
-                mMenuAdapter = new MenuAdapter(fm, mRecycler,
+                mMenuAdapter = new MenuAdapter(getContext(), fm, mRecycler,
                         foodList, screenSize);
                 mRecycler.setAdapter(mMenuAdapter);
                 mProgressBar.setVisibility(View.GONE);

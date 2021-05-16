@@ -2,9 +2,7 @@ package com.allteran.pizzamira.model;
 
 import com.allteran.pizzamira.util.Const;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -12,7 +10,7 @@ import io.realm.RealmObject;
 public class Order extends RealmObject {
     private String id;
     private String userId;
-    private RealmList<String> foodListIds;
+    private RealmList<FoodItem> foodList;
     private int fullPrice;
     private OrderStatus status;
     private String payType;
@@ -35,7 +33,7 @@ public class Order extends RealmObject {
         this.fullPrice = fullPrice;
         this.status = new OrderStatus(Const.ID_ORDER_STATUS_NEW, Const.ORDER_STATUS_NEW);
         this.creationDate = new Date();
-        this.foodListIds = new RealmList<>();
+        this.foodList = new RealmList<>();
     }
 
     public String getId() {
@@ -54,12 +52,12 @@ public class Order extends RealmObject {
         this.userId = userId;
     }
 
-    public RealmList<String> getFoodListIds() {
-        return foodListIds;
+    public RealmList<FoodItem> getFoodList() {
+        return foodList;
     }
 
-    public void setFoodListIds(RealmList<String> foodListIds) {
-        this.foodListIds = foodListIds;
+    public void setFoodList(RealmList<FoodItem> foodList) {
+        this.foodList = foodList;
     }
 
     public int getFullPrice() {

@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 
 /**
  * Realm will hold only a little part of data - current order. When user wants to make an order (a real one)
@@ -29,16 +30,36 @@ public class RealmService {
         Realm.init(context);
     }
 
+    public static void deleteDatabase() {
+        RealmConfiguration config = Realm.getDefaultConfiguration();
+        Realm.deleteRealm(config);
+    }
+
     /**
      * There is should be only ONE order in database, because when order will change status -
-     * it will be deleted from database
+     * it will be deleted from database for sure
+     * In first time of init, you'd like to add first FoodItem to order
      */
-    public void createOrder(Realm realm) {
-        Order order = new Order();
+    public void createOrder(Realm realm, FoodItem foodItem) {
         realm.executeTransactionAsync(iRealm -> {
             Log.d(TAG, "createOrder: execute");
             Order realmOrder = iRealm.createObject(Order.class);
             realmOrder.setId(new ObjectId().toString().trim());
+
+            RealmList<FoodItem> rFoodList = new RealmList<>();
+
+            FoodItem rFoodItem = iRealm.createObject(FoodItem.class);
+            rFoodItem.setId(foodItem.getId());
+            rFoodItem.setCategoryId(foodItem.getCategoryId());
+            rFoodItem.setName(foodItem.getName());
+            rFoodItem.setThumbSrc(foodItem.getThumbSrc());
+            rFoodItem.setDescription(foodItem.getDescription());
+            rFoodItem.setPrice(foodItem.getPrice());
+            rFoodItem.setWeight(foodItem.getWeight());
+            rFoodItem.setCountInCart(foodItem.getCountInCart());
+
+            rFoodList.add(rFoodItem);
+            realmOrder.setFoodList(rFoodList);
         }, () -> {
             Log.d(TAG, "createOrder: onSuccess");
         }, error -> {
@@ -48,13 +69,12 @@ public class RealmService {
 
     /**
      * We should check if @return value is null. In that case we would create a new order. If value
+     *
      * @return != null => we will pull it from database and work with it further
      */
-    //TODO: ERROR: java.lang.IllegalArgumentException: Null objects cannot be copied from Realm
     public Order getCurrentOrder(Realm realm) {
         realm.beginTransaction();
-        Order order = realm.copyFromRealm(realm.where(Order.class)
-                .findFirst());
+        Order order = realm.where(Order.class).findFirst();
         realm.commitTransaction();
         return order;
     }
@@ -63,10 +83,36 @@ public class RealmService {
         realm.executeTransactionAsync(r -> {
             Log.d(TAG, "addItemToOrder: execute");
             Order order = r.where(Order.class).findFirst();
-            assert order != null;
-            order.getFoodListIds().add(foodItem.getId());
+            FoodItem rFoodItem = r.createObject(FoodItem.class);
+            rFoodItem.setId(foodItem.getId());
+            rFoodItem.setCategoryId(foodItem.getCategoryId());
+            rFoodItem.setName(foodItem.getName());
+            rFoodItem.setThumbSrc(foodItem.getThumbSrc());
+            rFoodItem.setDescription(foodItem.getDescription());
+            rFoodItem.setPrice(foodItem.getPrice());
+            rFoodItem.setWeight(foodItem.getWeight());
+            rFoodItem.setCountInCart(foodItem.getCountInCart());
+
+            if (order != null) {
+                if (order.getFoodList().isEmpty()) {
+                    order.getFoodList().add(rFoodItem);
+                }
+                //TODO: doesn't work properly
+                boolean itemInCart = false;
+                for (FoodItem item : order.getFoodList()) {
+                    String itemId = item.getId();
+                    if (itemId.equals(foodItem.getId())) {
+                        int count = item.getCountInCart() + 1;
+                        item.setCountInCart(count);
+                        itemInCart = true;
+                    }
+                }
+                if (!itemInCart) {
+                    order.getFoodList().add(rFoodItem);
+                }
+            }
         }, () -> {
-            Log.d(TAG, "addItemToOrder: execute");
+            Log.d(TAG, "addItemToOrder: execute successful");
         }, error -> {
             Log.e(TAG, "addItemToOrder: onError", error);
         });

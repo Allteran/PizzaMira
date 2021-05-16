@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.services.FirebaseService;
+import com.allteran.pizzamira.services.RealmService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        RealmService.deleteDatabase();
 
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
