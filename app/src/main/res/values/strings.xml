@@ -21,5 +21,6 @@
     <string name="login_button">Войти</string>
     <string name="resend_code"><u>Не получили код?</u></string>
     <string name="enter_code_button">Продолжить</string>
+    <string name="empty_cart_message">Ваша корзина пуста :(</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

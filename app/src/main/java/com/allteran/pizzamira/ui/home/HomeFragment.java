@@ -6,13 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.allteran.pizzamira.R;
+import com.allteran.pizzamira.services.RealmService;
 import com.allteran.pizzamira.ui.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +37,16 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        AppCompatButton deleteRealmButton = view.findViewById(R.id.button_delete_realm);
+        deleteRealmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RealmService.deleteDatabase();
+                Log.d(TAG, "realm database deleted");
+                Toast.makeText(getActivity(), "Realm database deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if(fUser !=null) {

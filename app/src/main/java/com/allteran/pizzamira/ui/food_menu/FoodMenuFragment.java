@@ -44,6 +44,13 @@ public class FoodMenuFragment extends Fragment {
 
     private MenuAdapter mMenuAdapter;
 
+    public static FoodMenuFragment newInstance() {
+        Bundle args = new Bundle();
+        FoodMenuFragment fragment = new FoodMenuFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //        mFoodMenuViewModel =

@@ -32,6 +32,8 @@ public class RealmService {
 
     public static void deleteDatabase() {
         RealmConfiguration config = Realm.getDefaultConfiguration();
+        Realm realm = Realm.getDefaultInstance();
+        realm.close();
         Realm.deleteRealm(config);
     }
 
