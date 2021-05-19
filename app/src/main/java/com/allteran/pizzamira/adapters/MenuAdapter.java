@@ -23,6 +23,7 @@ import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.services.RealmService;
 import com.allteran.pizzamira.ui.LoginActivity;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -139,6 +140,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
                 mDatabase.createOrder(mRealm, item);
             }
             mDatabase.addItemToOrder(mRealm, item);
+            Snackbar.make(rootView, "Блюдо " + item.getName() + " добавлено в корзину", Snackbar.LENGTH_SHORT).show();
             notifyDataSetChanged();
         }
     }

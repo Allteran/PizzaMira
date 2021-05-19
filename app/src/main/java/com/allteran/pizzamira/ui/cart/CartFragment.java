@@ -8,10 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,16 +21,10 @@ import android.widget.ProgressBar;
 
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.adapters.CartAdapter;
-import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
-import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.services.RealmService;
-import com.allteran.pizzamira.ui.food_menu.FoodMenuFragment;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 
@@ -46,7 +37,9 @@ public class CartFragment extends Fragment {
 
     private FirebaseService mFirebase;
 
-    private CartAdapter mAdapter;
+    private ProgressBar mProgressBar;
+    private LinearLayout mNoOrderContainer;
+    private AppCompatButton mMenuButton;
 
 
     @Override
@@ -68,10 +61,10 @@ public class CartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ProgressBar mProgressBar = view.findViewById(R.id.progress_bar_cart);
+        mProgressBar = view.findViewById(R.id.progress_bar_cart);
         mRecycler = view.findViewById(R.id.recycler_cart);
-        LinearLayout noOrderContainer = view.findViewById(R.id.no_order_container);
-        AppCompatButton openMenuButton = view.findViewById(R.id.open_menu_button);
+        mNoOrderContainer = view.findViewById(R.id.no_order_container);
+        mMenuButton = view.findViewById(R.id.open_menu_button);
 
         mProgressBar.setVisibility(View.VISIBLE);
         mRecycler.setVisibility(View.GONE);
@@ -85,19 +78,25 @@ public class CartFragment extends Fragment {
         Realm realm = Realm.getDefaultInstance();
         Order order = mRealmService.getCurrentOrder(realm);
         if (order == null) {
-            mProgressBar.setVisibility(View.GONE);
-            noOrderContainer.setVisibility(View.VISIBLE);
-            openMenuButton.setOnClickListener(v ->
-                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
-                            .navigate(R.id.navigation_menu));
+            displayNoOrderMessage();
+        } else if (order.getFoodList().isEmpty()) {
+            displayNoOrderMessage();
         } else {
-            mAdapter = new CartAdapter(order.getFoodList(), fm, mRecycler);
-            mRecycler.setAdapter(mAdapter);
+            CartAdapter adapter = new CartAdapter(order.getFoodList(), fm, mRecycler);
+            mRecycler.setAdapter(adapter);
             mRecycler.setVisibility(View.VISIBLE);
-            noOrderContainer.setVisibility(View.GONE);
+            mNoOrderContainer.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             Log.d(TAG, "CartAdapter is set");
         }
 
+    }
+
+    private void displayNoOrderMessage() {
+        mProgressBar.setVisibility(View.GONE);
+        mNoOrderContainer.setVisibility(View.VISIBLE);
+        mMenuButton.setOnClickListener(v ->
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
+                        .navigate(R.id.navigation_menu));
     }
 }

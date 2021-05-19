@@ -1,6 +1,5 @@
-package com.allteran.pizzamira.ui.food_menu;
+package com.allteran.pizzamira.ui.menu;
 
-import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -13,9 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,11 +28,11 @@ import java.util.List;
 //TODO: WARNING! This fragment doesn't implement ViewModel Pattern to display data. So you have to implement ViewModel
 //TODO: or implement creating fragment with newInstance
 
-public class FoodMenuFragment extends Fragment {
+public class MenuFragment extends Fragment {
 
     private FirebaseService mDatabaseService;
 
-    private FoodMenuViewModel mFoodMenuViewModel;
+    private MenuViewModel mMenuViewModel;
     private List<FoodItem> mFoodList;
 
     private RecyclerView mRecycler;
@@ -44,9 +40,9 @@ public class FoodMenuFragment extends Fragment {
 
     private MenuAdapter mMenuAdapter;
 
-    public static FoodMenuFragment newInstance() {
+    public static MenuFragment newInstance() {
         Bundle args = new Bundle();
-        FoodMenuFragment fragment = new FoodMenuFragment();
+        MenuFragment fragment = new MenuFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,7 +60,7 @@ public class FoodMenuFragment extends Fragment {
 //            }
 //        });
         mDatabaseService = new FirebaseService(FirebaseDatabase.getInstance());
-        return inflater.inflate(R.layout.fragment_food_menu, container, false);
+        return inflater.inflate(R.layout.fragment_menu, container, false);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.allteran.pizzamira.ui.food_menu;
+package com.allteran.pizzamira.ui.menu;
 
 import android.util.Log;
 
@@ -17,11 +17,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodMenuViewModel extends ViewModel {
+public class MenuViewModel extends ViewModel {
     private static final String TAG = "FOOD_MENU_VIEW_MODEL";
     private MutableLiveData<List<FoodItem>> fakeFoodList;
 
-    public FoodMenuViewModel() {
+    public MenuViewModel() {
         loadFoodList();
     }
 

@@ -8,6 +8,8 @@ import com.allteran.pizzamira.model.Order;
 
 import org.bson.types.ObjectId;
 
+import java.util.Iterator;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
@@ -71,6 +73,7 @@ public class RealmService {
 
     /**
      * We should check if @return value is null. In that case we would create a new order. If value
+     *
      * @return != null => we will pull it from database and work with it further
      */
     public Order getCurrentOrder(Realm realm) {
@@ -78,6 +81,40 @@ public class RealmService {
         Order order = realm.where(Order.class).findFirst();
         realm.commitTransaction();
         return order;
+    }
+
+    public void changeItemCount(Realm realm, FoodItem item, int count) {
+        Log.d(TAG, "changeItemCount");
+        realm.beginTransaction();
+        Order order = realm.where(Order.class).findFirst();
+        for (FoodItem foodItem : order.getFoodList()) {
+            String id = foodItem.getId();
+            if (id.equals(item.getId())) {
+                foodItem.setCountInCart(count);
+            }
+        }
+        realm.commitTransaction();
+    }
+
+    public void deleteItemFromOrder(Realm realm, FoodItem item) {
+        Log.d(TAG, "deleteItemFromOrder");
+        realm.beginTransaction();
+        Order order = realm.where(Order.class).findFirst();
+        for (Iterator<FoodItem> iterator = order.getFoodList().iterator(); iterator.hasNext(); ) {
+            String id = iterator.next().getId();
+            if(id.equals(item.getId())) {
+                iterator.remove();
+            }
+        }
+
+//            for (FoodItem foodItem : order.getFoodList()) {
+//                String id = foodItem.getId();
+//                if (id.equals(item.getId())) {
+//                    order.getFoodList().remove(foodItem);
+//                    Log.d(TAG, "item named = " + foodItem.getName() + " has been removed from order");
+//                }
+//            }
+        realm.commitTransaction();
     }
 
     public void addItemToOrder(Realm realm, FoodItem foodItem) {
@@ -94,10 +131,6 @@ public class RealmService {
             rFoodItem.setCountInCart(1);
 
             if (order != null) {
-                if (order.getFoodList().isEmpty()) {
-                    order.getFoodList().add(rFoodItem);
-                }
-                //TODO: doesn't work properly
                 boolean itemInCart = false;
                 for (FoodItem item : order.getFoodList()) {
                     String itemId = item.getId();
