@@ -71,7 +71,6 @@ public class RealmService {
 
     /**
      * We should check if @return value is null. In that case we would create a new order. If value
-     *
      * @return != null => we will pull it from database and work with it further
      */
     public Order getCurrentOrder(Realm realm) {
@@ -83,7 +82,6 @@ public class RealmService {
 
     public void addItemToOrder(Realm realm, FoodItem foodItem) {
         realm.executeTransactionAsync(r -> {
-            Log.d(TAG, "addItemToOrder: execute");
             Order order = r.where(Order.class).findFirst();
             FoodItem rFoodItem = r.createObject(FoodItem.class);
             rFoodItem.setId(foodItem.getId());
@@ -93,7 +91,7 @@ public class RealmService {
             rFoodItem.setDescription(foodItem.getDescription());
             rFoodItem.setPrice(foodItem.getPrice());
             rFoodItem.setWeight(foodItem.getWeight());
-            rFoodItem.setCountInCart(foodItem.getCountInCart());
+            rFoodItem.setCountInCart(1);
 
             if (order != null) {
                 if (order.getFoodList().isEmpty()) {
