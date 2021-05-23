@@ -22,5 +22,7 @@
     <string name="resend_code"><u>Не получили код?</u></string>
     <string name="enter_code_button">Продолжить</string>
     <string name="empty_cart_message">Ваша корзина пуста :(</string>
+    <string name="no_internet_message">Похоже, что вы не подключены к сети. Проверьте соединение, а затем повторите попытку</string>
+    <string name="no_internet_button">Повторить</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

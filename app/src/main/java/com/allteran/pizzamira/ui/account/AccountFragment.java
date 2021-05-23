@@ -57,6 +57,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
+            mSignOutButton.setVisibility(View.VISIBLE);
             //User is logged in
         } else {
             Intent intent = new Intent(getActivity(), LoginActivity.class);

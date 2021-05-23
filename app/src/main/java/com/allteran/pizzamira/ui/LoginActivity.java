@@ -1,6 +1,9 @@
 package com.allteran.pizzamira.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
@@ -23,7 +26,6 @@ import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
-import com.allteran.pizzamira.util.Const;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -35,8 +37,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
@@ -48,9 +48,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private FirebaseService mDatabaseService;
 
-    private ConstraintLayout mPhoneLayout;
-    private ConstraintLayout mCodeLayout;
+    private ConstraintLayout mPhoneContainer;
+    private ConstraintLayout mCodeContainer;
     private ProgressBar mProgressBar;
+    private ConstraintLayout mNoNetworkContainer;
 
     private EditText mPhoneEditText;
     private EditText mCodeEditText;
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private AppCompatButton mLoginButton;
     private AppCompatButton mEnterCodeButton;
+    private AppCompatButton mResetNetworkButton;
 
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -125,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
                                 assert fUser != null;
 
-                                mCodeLayout.setVisibility(View.GONE);
+                                mCodeContainer.setVisibility(View.GONE);
                                 mProgressBar.setVisibility(View.VISIBLE);
 
                                 //If it's first time when user going to login - we should add this user to database
@@ -215,12 +217,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mResendCodeLabel = findViewById(R.id.resend_code_label);
         mAnotherPhoneLabel = findViewById(R.id.enter_another_phone_label);
 
-        mPhoneLayout = findViewById(R.id.phone_layout);
-        mCodeLayout = findViewById(R.id.code_layout);
+        mPhoneContainer = findViewById(R.id.phone_container);
+        mCodeContainer = findViewById(R.id.code_container);
+        mNoNetworkContainer = findViewById(R.id.no_network_container);
 
         mLoginButton = findViewById(R.id.login_button);
         mEnterCodeButton = findViewById(R.id.enter_code_button);
+        mResetNetworkButton = findViewById(R.id.reset_network_button);
 
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        if (isNetworkConnected()) {
+            showLoginForm();
+        } else {
+            showNoNetwork();
+        }
+        mResetNetworkButton.setOnClickListener(this);
         mResendCodeLabel.setOnClickListener(this);
         mAnotherPhoneLabel.setOnClickListener(this);
         //let's make uneditable prefix for phone number
@@ -255,6 +267,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mEnterCodeButton.setOnClickListener(this);
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
+    }
+
+    private void showLoginForm() {
+        mProgressBar.setVisibility(View.GONE);
+        mNoNetworkContainer.setVisibility(View.GONE);
+        mPhoneContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showNoNetwork() {
+        mProgressBar.setVisibility(View.GONE);
+        mPhoneContainer.setVisibility(View.GONE);
+        mCodeContainer.setVisibility(View.GONE);
+        mNoNetworkContainer.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onClick(View v) {
         Log.d(TAG, "onClick");
@@ -283,6 +314,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.resend_code_label) {
             sendVerificationCode(mPhoneEditText.getText().toString().trim());
         }
+        if(v.getId() == R.id.reset_network_button) {
+            if(isNetworkConnected()) {
+                showLoginForm();
+            }
+        }
     }
 
     private void sendVerificationCode(String phoneNumber) {
@@ -297,16 +333,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void showCodeLayout() {
-        mPhoneLayout.setVisibility(View.GONE);
-        mCodeLayout.setVisibility(View.VISIBLE);
+        mPhoneContainer.setVisibility(View.GONE);
+        mCodeContainer.setVisibility(View.VISIBLE);
         mCodeEditText.requestFocus();
 
         mCodeLabel.setText("Введите код, что был выслан на номер " + mPhoneEditText.getText().toString().trim());
     }
 
     private void showPhoneLayout() {
-        mCodeLayout.setVisibility(View.GONE);
-        mPhoneLayout.setVisibility(View.VISIBLE);
+        mCodeContainer.setVisibility(View.GONE);
+        mPhoneContainer.setVisibility(View.VISIBLE);
         mPhoneEditText.requestFocus();
     }
 
