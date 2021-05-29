@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name=".applications.PizzaMiraApp"
-        android:theme="@style/Theme.Deliverer">
+        android:theme="@style/Theme.PizzaMira">
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login"

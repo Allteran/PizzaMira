@@ -103,6 +103,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
     public void onClick(View v) {
         //TODO: find way to get mRecycler child position
         if (v.getId() == R.id.food_item_thumb) {
+            //Next part of code is totally cursed, but it works.
+            //To get right child of RecyclerView we must go into full deep of levels to our clicked view
             View rootView = (View) v
                     .getParent() // ConstraintLayout
                     .getParent() // LinearLayout
@@ -114,6 +116,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
             return;
         }
         if (v.getId() == R.id.food_item_name) {
+            //same sht
             View rootView = (View) v
                     .getParent() // ConstraintLayout
                     .getParent() // Linear
@@ -126,6 +129,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
         }
         if (v.getId() == R.id.food_item_price) {
             mRealm = Realm.getDefaultInstance();
+            //Deep dark fantasy (c)
             View rootView = (View) v
                     .getParent() // ConstraintLayout
                     .getParent() // RelativeLayout

@@ -107,13 +107,6 @@ public class RealmService {
             }
         }
 
-//            for (FoodItem foodItem : order.getFoodList()) {
-//                String id = foodItem.getId();
-//                if (id.equals(item.getId())) {
-//                    order.getFoodList().remove(foodItem);
-//                    Log.d(TAG, "item named = " + foodItem.getName() + " has been removed from order");
-//                }
-//            }
         realm.commitTransaction();
     }
 

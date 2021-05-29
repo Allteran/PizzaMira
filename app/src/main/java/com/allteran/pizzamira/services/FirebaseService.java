@@ -31,6 +31,8 @@ public class FirebaseService {
         void dataIsLoaded(User user);
 
         void dataIsLoaded(Order order);
+
+        void onLoadError(@NonNull DatabaseError error);
     }
 
     public FirebaseService(FirebaseDatabase database) {
@@ -42,13 +44,10 @@ public class FirebaseService {
      * only with two fields: phone and UUID, other fields will be updated after forming first order
      */
     public void addUser(FirebaseUser firebaseUser) {
-        Log.d(TAG, "ADDUSER: Going to add user to DB");
-        Log.d(TAG, "ADDUSER: FirebaseUser's phone " + firebaseUser.getPhoneNumber());
         User user = new User();
         user.setId(firebaseUser.getUid());
         user.setPhone(firebaseUser.getPhoneNumber());
         mReference.child(Const.DB_TREE_USERS).child(firebaseUser.getUid()).setValue(user);
-        Log.d(TAG, "ADDUSER: user added");
     }
 
     public void loadFoodList(final DataStatus dataStatus) {
@@ -67,8 +66,9 @@ public class FirebaseService {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                dataStatus.onLoadError(error);
             }
+
         });
     }
 
@@ -80,8 +80,8 @@ public class FirebaseService {
                 if (snapshot.exists()) {
                     for (DataSnapshot childSnap : snapshot.getChildren()) {
                         FoodItem item = childSnap.getValue(FoodItem.class);
-                        for(String foodId : foodListIds) {
-                            if(foodId.equals(item.getId())) {
+                        for (String foodId : foodListIds) {
+                            if (foodId.equals(item.getId())) {
                                 foodList.add(item);
                             }
                         }
@@ -95,33 +95,10 @@ public class FirebaseService {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "loadFoodListByIds: onCanceled ", error.toException());
+                dataStatus.onLoadError(error);
             }
         });
     }
-
-//    public void addFoodToOrder(String userId, FoodItem foodItem, Order order) {
-//        Log.d(TAG, "ADDITEMTOORDER: begin");
-//        order.getFoodListIds().add(foodItem.getId());
-//        mReference.child(Const.DB_TREE_CART).child(userId).setValue(order);
-//    }
-//
-//    public void pullCurrentOrder(String userId, final DataStatus dataStatus) {
-//        mReference.child(Const.DB_TREE_CART).child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if(task.isSuccessful()) {
-//                    if(task.getResult().exists()) {
-//                        Order order = task.getResult().getValue(Order.class);
-//                        dataStatus.dataIsLoaded(order);
-//                    } else {
-//                        Log.d(TAG, "pullCurrentOrder: there is no such order");
-//                    }
-//                } else {
-//                    Log.d(TAG, "pullCurrentOrder: task was not successful", task.getException());
-//                }
-//            }
-//        });
-//    }
 
     public void findUserById(String userId, final DataStatus dataStatus) {
         mReference.child(Const.DB_TREE_USERS).child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

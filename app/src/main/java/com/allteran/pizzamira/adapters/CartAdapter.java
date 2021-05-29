@@ -74,6 +74,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     public void onClick(View v) {
         if (v.getId() == R.id.button_add_item) {
             Log.d(TAG, "button - plus item");
+            //Next part of code is totally cursed, but it works.
+            //To get right child of RecyclerView we must go into full deep of levels to our clicked view
             View rootView = (View) v
                     .getParent()
                     .getParent()
@@ -89,6 +91,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         }
         if (v.getId() == R.id.button_minus_item) {
             Log.d(TAG, "button - minus item");
+            //Same shit here
             View rootView = (View) v
                     .getParent()
                     .getParent()

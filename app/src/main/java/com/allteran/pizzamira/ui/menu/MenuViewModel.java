@@ -2,6 +2,7 @@ package com.allteran.pizzamira.ui.menu;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,8 +12,11 @@ import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.util.Const;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,23 +35,29 @@ public class MenuViewModel extends ViewModel {
 
         FirebaseService mDatabaseService = new FirebaseService(FirebaseDatabase.getInstance());
 
-       mDatabaseService.loadFoodList(new FirebaseService.DataStatus() {
-           @Override
-           public void dataIsLoaded(List<FoodItem> foodList) {
-               foodItems[0] = foodList;
-               Log.d(TAG, "dataIsLoaded");
-           }
+        mDatabaseService.loadFoodList(new FirebaseService.DataStatus() {
+            @Override
+            public void dataIsLoaded(List<FoodItem> foodList) {
+                foodItems[0] = foodList;
+                Log.d(TAG, "dataIsLoaded");
+            }
 
-           @Override
-           public void dataIsLoaded(User user) {
+            @Override
+            public void dataIsLoaded(User user) {
 
-           }
+            }
 
-           @Override
-           public void dataIsLoaded(Order order) {
+            @Override
+            public void dataIsLoaded(Order order) {
 
-           }
-       });
+            }
+
+            @Override
+            public void onLoadError(@NonNull @NotNull DatabaseError error) {
+                error.toException().printStackTrace();
+            }
+
+        });
 
 //
 //        FoodCategory pizzaCategory = new FoodCategory("PZZ", "Пиццы");

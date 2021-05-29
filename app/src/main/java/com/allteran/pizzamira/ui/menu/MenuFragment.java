@@ -1,7 +1,11 @@
 package com.allteran.pizzamira.ui.menu;
 
+import android.content.Context;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,8 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,14 +28,18 @@ import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 //TODO: WARNING! This fragment doesn't implement ViewModel Pattern to display data. So you have to implement ViewModel
 //TODO: or implement creating fragment with newInstance
 
-public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private FirebaseService mDatabaseService;
 
@@ -39,6 +49,8 @@ public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private RecyclerView mRecycler;
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefresh;
+    private ConstraintLayout mNoNetworkContainer;
+    private AppCompatButton mResetNetworkButton;
 
     private MenuAdapter mMenuAdapter;
     private Point mScreenSize;
@@ -74,7 +86,10 @@ public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mRecycler = view.findViewById(R.id.food_list_recycler);
         mProgressBar = view.findViewById(R.id.progress_bar);
         mSwipeRefresh = view.findViewById(R.id.swipe_to_refresh);
+        mNoNetworkContainer = view.findViewById(R.id.no_network_container);
+        mResetNetworkButton = view.findViewById(R.id.reset_network_button);
 
+        mResetNetworkButton.setOnClickListener(this);
         mSwipeRefresh.setOnRefreshListener(this);
 
         mProgressBar.setVisibility(View.VISIBLE);
@@ -89,11 +104,24 @@ public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         mFragmentManager = getActivity().getSupportFragmentManager();
-        //TODO: after add SwipeRefreshLayout menu doesn't display. Check if it loaded to adapter
+        if (!isNetworkConnected()) {
+            showNoNetwork();
+        } else {
+            showMenu();
+        }
+    }
+
+    private void showMenu() {
+        mNoNetworkContainer.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRecycler.setVisibility(View.VISIBLE);
         mSwipeRefresh.post(this::loadMenu);
+    }
 
-//        loadMenu();
-
+    private void showNoNetwork() {
+        mRecycler.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
+        mNoNetworkContainer.setVisibility(View.VISIBLE);
     }
 
     private void loadMenu() {
@@ -116,12 +144,34 @@ public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void dataIsLoaded(Order order) {
 
             }
+
+            @Override
+            public void onLoadError(@NonNull @NotNull DatabaseError error) {
+                error.toException().printStackTrace();
+                Snackbar.make(getView(), "При загрузке возникла ошибка. Проверьте подключение к сети", Snackbar.LENGTH_SHORT).show();
+            }
         });
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
     }
 
     @Override
     public void onRefresh() {
         loadMenu();
         mMenuAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.reset_network_button) {
+            if (isNetworkConnected()) {
+                showMenu();
+            }
+        }
     }
 }

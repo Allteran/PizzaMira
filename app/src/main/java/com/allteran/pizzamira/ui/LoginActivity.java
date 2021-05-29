@@ -28,6 +28,7 @@ import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
@@ -37,7 +38,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -158,27 +162,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     public void dataIsLoaded(Order order) {
 
                                     }
+
+                                    @Override
+                                    public void onLoadError(@NonNull @NotNull DatabaseError error) {
+                                    }
                                 });
-//                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
-//                                userRef.child(Const.DB_TREE_USERS).child(fUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                                        if (task.isSuccessful()) {
-//                                            //Check if user already exist in database
-//                                            //if doesnt - add one to database
-//                                            if (!task.getResult().exists()) {
-//                                                Log.d(TAG, "finduser: user not found, add new one");
-//                                                mDatabaseService.addUser(fUser);
-//                                            } else {
-//                                                Log.d(TAG, "finduser: user exist, so we won't add it to db");
-//                                            }
-//                                            Log.d(TAG, "sign is successful, task is completed");
-//                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                            startActivity(intent);
-//                                        }
-//                                    }
-//                                });
                             } else {
                                 Log.d(TAG, task.getException().getMessage());
                                 Log.d(TAG, "singInWithPhoneAuthCredentials task failed. See loglist below");
@@ -312,10 +300,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             showPhoneLayout();
         }
         if (v.getId() == R.id.resend_code_label) {
+            Snackbar.make(v, "Код был выслан повторно на номер " + mPhoneEditText.getText().toString().trim(), Snackbar.LENGTH_SHORT).show();
             sendVerificationCode(mPhoneEditText.getText().toString().trim());
         }
-        if(v.getId() == R.id.reset_network_button) {
-            if(isNetworkConnected()) {
+        if (v.getId() == R.id.reset_network_button) {
+            if (isNetworkConnected()) {
                 showLoginForm();
             }
         }
