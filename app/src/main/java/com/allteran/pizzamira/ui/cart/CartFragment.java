@@ -24,6 +24,8 @@ import com.allteran.pizzamira.adapters.CartAdapter;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.services.RealmService;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.FirebaseDatabase;
 
 import io.realm.Realm;
@@ -49,13 +51,6 @@ public class CartFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_cart, container, false);
     }
 
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        mViewModel = new ViewModelProvider(this).get(CartViewModel.class);
-//        // TODO: Use the ViewModel
-//    }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -74,21 +69,22 @@ public class CartFragment extends Fragment {
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
 
-        RealmService mRealmService = new RealmService();
+        RealmService realmService = new RealmService();
         Realm realm = Realm.getDefaultInstance();
-        Order order = mRealmService.getCurrentOrder(realm);
+        Order order = realmService.getCurrentOrder(realm);
         if (order == null) {
             displayNoOrderMessage();
         } else if (order.getFoodList().isEmpty()) {
             displayNoOrderMessage();
         } else {
-            CartAdapter adapter = new CartAdapter(order.getFoodList(), fm, mRecycler);
+            CartAdapter adapter = new CartAdapter(order.getFoodList(), fm, mRecycler, getActivity());
             mRecycler.setAdapter(adapter);
             mRecycler.setVisibility(View.VISIBLE);
             mNoOrderContainer.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             Log.d(TAG, "CartAdapter is set");
         }
+
 
     }
 

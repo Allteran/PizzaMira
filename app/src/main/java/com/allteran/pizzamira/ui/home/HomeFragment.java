@@ -17,8 +17,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.services.RealmService;
 import com.allteran.pizzamira.ui.LoginActivity;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Random;
+
+import io.realm.Realm;
 
 public class HomeFragment extends Fragment {
 
@@ -39,20 +45,19 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         AppCompatButton deleteRealmButton = view.findViewById(R.id.button_delete_realm);
-        deleteRealmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RealmService.deleteDatabase();
-                Log.d(TAG, "realm database deleted");
-                Toast.makeText(getActivity(), "Realm database deleted", Toast.LENGTH_SHORT).show();
-            }
+        deleteRealmButton.setOnClickListener(v -> {
+            RealmService.deleteDatabase();
+            Log.d(TAG, "realm database deleted");
+            Toast.makeText(getActivity(), "Realm database deleted", Toast.LENGTH_SHORT).show();
         });
+        RealmService realmService = new RealmService(getActivity());
+        realmService.showBadge(Realm.getDefaultInstance());
 
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(fUser !=null) {
+        if (fUser != null) {
             Log.d(TAG, "fUser is logged in");
             Log.d(TAG, fUser.toString());
-        } else  {
+        } else {
             Log.d(TAG, "fUser is null, so its not logged in");
         }
     }

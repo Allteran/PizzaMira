@@ -1,5 +1,6 @@
 package com.allteran.pizzamira.adapters;
 
+import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +33,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     public CartAdapter() {
     }
 
-    public CartAdapter(List<FoodItem> foodList, FragmentManager fragmentManager, RecyclerView recyclerView) {
+    public CartAdapter(List<FoodItem> foodList, FragmentManager fragmentManager, RecyclerView recyclerView,
+                       Activity mainActivity) {
         this.mFoodList = foodList;
         this.mFragmentManager = fragmentManager;
         this.mRecycler = recyclerView;
-        mDatabase = new RealmService();
+        mDatabase = new RealmService(mainActivity);
     }
 
     @NonNull

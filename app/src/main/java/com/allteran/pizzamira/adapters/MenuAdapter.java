@@ -1,5 +1,6 @@
 package com.allteran.pizzamira.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -52,13 +53,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
     }
 
     public MenuAdapter(Context context, FragmentManager fragmentManager, RecyclerView recyclerView,
-                       List<FoodItem> foodList, Point screenSize) {
+                       List<FoodItem> foodList, Point screenSize, Activity activity) {
         this.mContext = context;
         this.mFragmentManager = fragmentManager;
         this.mRecycler = recyclerView;
         this.mFoodList = foodList;
         this.mScreenSize = screenSize;
-        this.mDatabase = new RealmService();
+        this.mDatabase = new RealmService(activity);
     }
 
     @NonNull

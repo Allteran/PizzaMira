@@ -1,10 +1,16 @@
 package com.allteran.pizzamira.services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.bson.types.ObjectId;
 
@@ -21,6 +27,17 @@ import io.realm.RealmList;
 
 public class RealmService {
     private static final String TAG = "REALM_SERVICE";
+    private AppCompatActivity mActivity;
+
+
+    public RealmService(Activity activity) {
+        mActivity = (AppCompatActivity) activity;
+    }
+
+    //Empty constructor required for situation when you don't have to update badges
+    public RealmService() {
+
+    }
 
 
     public static void initRealm(Context context) {
@@ -38,6 +55,7 @@ public class RealmService {
         realm.close();
         Realm.deleteRealm(config);
     }
+
 
     /**
      * There is should be only ONE order in database, because when order will change status -
@@ -64,6 +82,8 @@ public class RealmService {
 
             rFoodList.add(rFoodItem);
             realmOrder.setFoodList(rFoodList);
+
+            updateBadgeCount(realmOrder, mActivity);
         }, () -> {
             Log.d(TAG, "createOrder: onSuccess");
         }, error -> {
@@ -93,6 +113,8 @@ public class RealmService {
                 foodItem.setCountInCart(count);
             }
         }
+
+        updateBadgeCount(order, mActivity);
         realm.commitTransaction();
     }
 
@@ -102,11 +124,16 @@ public class RealmService {
         Order order = realm.where(Order.class).findFirst();
         for (Iterator<FoodItem> iterator = order.getFoodList().iterator(); iterator.hasNext(); ) {
             String id = iterator.next().getId();
-            if(id.equals(item.getId())) {
+            if (id.equals(item.getId())) {
                 iterator.remove();
             }
         }
 
+        realm.commitTransaction();
+
+        realm.beginTransaction();
+        Order orderForBadges = realm.where(Order.class).findFirst();
+        updateBadgeCount(orderForBadges, mActivity);
         realm.commitTransaction();
     }
 
@@ -137,12 +164,41 @@ public class RealmService {
                     order.getFoodList().add(rFoodItem);
                 }
             }
+
         }, () -> {
             Log.d(TAG, "addItemToOrder: execute successful");
+            realm.beginTransaction();
+            Order order = realm.where(Order.class).findFirst();
+            if (order != null) {
+                updateBadgeCount(order, mActivity);
+            }
+            realm.commitTransaction();
         }, error -> {
             Log.e(TAG, "addItemToOrder: onError", error);
         });
     }
 
+    private void updateBadgeCount(Order order, AppCompatActivity activity) {
+        Log.d(TAG, "updateBadge: init");
+        BottomNavigationView navView = activity.findViewById(R.id.nav_view);
+        int badgeCount = 0;
+        BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_cart);
+        for (FoodItem item : order.getFoodList()) {
+            badgeCount = badgeCount + item.getCountInCart();
+        }
+        Log.d(TAG, "updateBadge: badgeCount = " + badgeCount);
+        badge.setNumber(badgeCount);
+        badge.setVisible(true, true);
 
+        if (badgeCount <= 0) {
+            badge.setVisible(false, true);
+        }
+    }
+
+    public void showBadge(Realm realm) {
+        realm.beginTransaction();
+        Order order = realm.where(Order.class).findFirst();
+        updateBadgeCount(order, mActivity);
+        realm.commitTransaction();
+    }
 }

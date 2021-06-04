@@ -129,7 +129,7 @@ public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void dataIsLoaded(List<FoodItem> foodList) {
                 mMenuAdapter = new MenuAdapter(getContext(), mFragmentManager, mRecycler,
-                        foodList, mScreenSize);
+                        foodList, mScreenSize, getActivity());
                 mRecycler.setAdapter(mMenuAdapter);
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefresh.setRefreshing(false);
