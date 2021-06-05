@@ -82,10 +82,17 @@ public class RealmService {
 
             rFoodList.add(rFoodItem);
             realmOrder.setFoodList(rFoodList);
+            int fullPrice = foodItem.getPrice() * foodItem.getCountInCart();
+            realmOrder.setFullPrice(fullPrice);
 
-            updateBadgeCount(realmOrder, mActivity);
         }, () -> {
             Log.d(TAG, "createOrder: onSuccess");
+            realm.beginTransaction();
+            Order order = realm.where(Order.class).findFirst();
+            if (order != null) {
+                updateBadgeCount(order, mActivity);
+            }
+            realm.commitTransaction();
         }, error -> {
             Log.e(TAG, "createOrder: onError", error);
         });
@@ -106,13 +113,16 @@ public class RealmService {
     public void changeItemCount(Realm realm, FoodItem item, int count) {
         Log.d(TAG, "changeItemCount");
         realm.beginTransaction();
+        int fullPrice = 0;
         Order order = realm.where(Order.class).findFirst();
         for (FoodItem foodItem : order.getFoodList()) {
             String id = foodItem.getId();
             if (id.equals(item.getId())) {
                 foodItem.setCountInCart(count);
             }
+            fullPrice += foodItem.getPrice() * foodItem.getCountInCart();
         }
+        order.setFullPrice(fullPrice);
 
         updateBadgeCount(order, mActivity);
         realm.commitTransaction();
@@ -128,6 +138,12 @@ public class RealmService {
                 iterator.remove();
             }
         }
+
+        int fullPrice = 0;
+        for (FoodItem foodItem : order.getFoodList()) {
+            fullPrice += foodItem.getPrice() * foodItem.getCountInCart();
+        }
+        order.setFullPrice(fullPrice);
 
         realm.commitTransaction();
 
@@ -164,6 +180,11 @@ public class RealmService {
                     order.getFoodList().add(rFoodItem);
                 }
             }
+            int fullPrice = 0;
+            for (FoodItem item : order.getFoodList()) {
+                fullPrice += item.getPrice() * item.getCountInCart();
+            }
+            order.setFullPrice(fullPrice);
 
         }, () -> {
             Log.d(TAG, "addItemToOrder: execute successful");

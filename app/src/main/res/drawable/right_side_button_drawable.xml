@@ -5,5 +5,6 @@
         android:width="0dp"
         android:color="@color/primaryColor" />
     <corners
-        android:radius="@dimen/button_default_radius"/>
+        android:topRightRadius="15dp"
+        android:bottomRightRadius="15dp"/>
 </shape>

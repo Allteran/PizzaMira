@@ -16,8 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.services.RealmService;
+import com.allteran.pizzamira.util.Utils;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 
@@ -26,6 +31,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     private List<FoodItem> mFoodList;
     private FragmentManager mFragmentManager;
     private RecyclerView mRecycler;
+    private TextView mPriceOrderButton;
 
     private RealmService mDatabase;
     private Realm mRealm;
@@ -33,11 +39,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     public CartAdapter() {
     }
 
-    public CartAdapter(List<FoodItem> foodList, FragmentManager fragmentManager, RecyclerView recyclerView,
-                       Activity mainActivity) {
+    public CartAdapter(List<FoodItem> foodList, FragmentManager fragmentManager,
+                       RecyclerView recyclerView, Activity mainActivity, TextView priceOrderButton) {
         this.mFoodList = foodList;
         this.mFragmentManager = fragmentManager;
         this.mRecycler = recyclerView;
+        this.mPriceOrderButton = priceOrderButton;
         mDatabase = new RealmService(mainActivity);
     }
 
@@ -88,6 +95,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
             int position = mRecycler.getChildLayoutPosition(rootView);
             int counter = mFoodList.get(position).getCountInCart() + 1;
             mDatabase.changeItemCount(mRealm, mFoodList.get(position), counter);
+
+            String fullPrice = Utils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
+            mPriceOrderButton.setText(fullPrice);
+
             notifyDataSetChanged();
             return;
         }
@@ -108,6 +119,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
             } else {
                 mDatabase.changeItemCount(mRealm, mFoodList.get(position), counter);
             }
+
+            String fullPrice = Utils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
+            mPriceOrderButton.setText(fullPrice);
+
             notifyDataSetChanged();
             return;
         }
@@ -119,6 +134,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
                     .getParent();
             int position = mRecycler.getChildLayoutPosition(rootView);
             mDatabase.deleteItemFromOrder(mRealm, mFoodList.get(position));
+
+            String fullPrice = Utils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
+            mPriceOrderButton.setText(fullPrice);
+
             notifyDataSetChanged();
             return;
         }

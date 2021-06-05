@@ -21,9 +21,9 @@
             android:id="@+id/empty_cart_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/oval_drawable"
             android:text="@string/empty_cart_message"
             android:textSize="20sp"
-            android:background="@drawable/oval_drawable"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -52,5 +52,47 @@
         android:id="@+id/recycler_cart"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/order_buttons_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/button_confirm_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="5"
+            android:background="@drawable/left_side_button_drawable"
+            android:maxLines="1"
+            android:padding="15dp"
+            android:text="Оформить заказ"
+            android:textColor="@color/black"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/button_price_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="5"
+            android:background="@drawable/right_side_button_drawable"
+            android:padding="15dp"
+            android:text="2 098 р."
+            android:textAlignment="viewEnd"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

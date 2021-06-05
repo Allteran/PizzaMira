@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,9 +41,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
     private FragmentManager mFragmentManager;
     private RecyclerView mRecycler;
     private Point mScreenSize;
-    private Context mContext;
-
-    private int mPosition;
 
     private RealmService mDatabase;
     private Realm mRealm;
@@ -54,7 +52,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
 
     public MenuAdapter(Context context, FragmentManager fragmentManager, RecyclerView recyclerView,
                        List<FoodItem> foodList, Point screenSize, Activity activity) {
-        this.mContext = context;
         this.mFragmentManager = fragmentManager;
         this.mRecycler = recyclerView;
         this.mFoodList = foodList;
@@ -102,7 +99,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
 
     @Override
     public void onClick(View v) {
-        //TODO: find way to get mRecycler child position
         if (v.getId() == R.id.food_item_thumb) {
             //Next part of code is totally cursed, but it works.
             //To get right child of RecyclerView we must go into full deep of levels to our clicked view
