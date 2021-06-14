@@ -90,7 +90,7 @@ public class RealmService {
             realm.beginTransaction();
             Order order = realm.where(Order.class).findFirst();
             if (order != null) {
-                updateBadgeCount(order, mActivity);
+                updateCartBadgeCount(order, mActivity);
             }
             realm.commitTransaction();
         }, error -> {
@@ -124,7 +124,7 @@ public class RealmService {
         }
         order.setFullPrice(fullPrice);
 
-        updateBadgeCount(order, mActivity);
+        updateCartBadgeCount(order, mActivity);
         realm.commitTransaction();
     }
 
@@ -149,7 +149,7 @@ public class RealmService {
 
         realm.beginTransaction();
         Order orderForBadges = realm.where(Order.class).findFirst();
-        updateBadgeCount(orderForBadges, mActivity);
+        updateCartBadgeCount(orderForBadges, mActivity);
         realm.commitTransaction();
     }
 
@@ -191,7 +191,7 @@ public class RealmService {
             realm.beginTransaction();
             Order order = realm.where(Order.class).findFirst();
             if (order != null) {
-                updateBadgeCount(order, mActivity);
+                updateCartBadgeCount(order, mActivity);
             }
             realm.commitTransaction();
         }, error -> {
@@ -199,7 +199,11 @@ public class RealmService {
         });
     }
 
-    private void updateBadgeCount(Order order, AppCompatActivity activity) {
+    /**
+     * Next method will show exactly number of ordered dishes into cart's badge
+     * and update it when its needed
+     */
+    private void updateCartBadgeCount(Order order, AppCompatActivity activity) {
         Log.d(TAG, "updateBadge: init");
         BottomNavigationView navView = activity.findViewById(R.id.nav_view);
         int badgeCount = 0;
@@ -216,10 +220,13 @@ public class RealmService {
         }
     }
 
-    public void showBadge(Realm realm) {
+    /**
+     * This will show cart badge when app starts in case when there was unfinished order
+     */
+    public void showCartBadge(Realm realm) {
         realm.beginTransaction();
         Order order = realm.where(Order.class).findFirst();
-        updateBadgeCount(order, mActivity);
+        updateCartBadgeCount(order, mActivity);
         realm.commitTransaction();
     }
 }

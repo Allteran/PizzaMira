@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,13 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.services.RealmService;
-import com.allteran.pizzamira.util.Utils;
+import com.allteran.pizzamira.util.StringUtils;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.Realm;
 
@@ -30,8 +28,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     private static final String TAG = "CART_ADAPTER";
     private List<FoodItem> mFoodList;
     private FragmentManager mFragmentManager;
+
     private RecyclerView mRecycler;
     private TextView mPriceOrderButton;
+    private TextView mConfirmOrderButton;
+    private LinearLayout mNoOrderContainer;
+    private ProgressBar mProgressBar;
 
     private RealmService mDatabase;
     private Realm mRealm;
@@ -40,11 +42,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     }
 
     public CartAdapter(List<FoodItem> foodList, FragmentManager fragmentManager,
-                       RecyclerView recyclerView, Activity mainActivity, TextView priceOrderButton) {
+                       RecyclerView recyclerView, Activity mainActivity, TextView priceOrderButton,
+                       TextView confirmOrderButton, ProgressBar progress, LinearLayout noOrderContainer) {
         this.mFoodList = foodList;
         this.mFragmentManager = fragmentManager;
         this.mRecycler = recyclerView;
         this.mPriceOrderButton = priceOrderButton;
+        this.mConfirmOrderButton = confirmOrderButton;
+        this.mProgressBar = progress;
+        this.mNoOrderContainer = noOrderContainer;
         mDatabase = new RealmService(mainActivity);
     }
 
@@ -96,7 +102,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
             int counter = mFoodList.get(position).getCountInCart() + 1;
             mDatabase.changeItemCount(mRealm, mFoodList.get(position), counter);
 
-            String fullPrice = Utils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
+            String fullPrice = StringUtils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
             mPriceOrderButton.setText(fullPrice);
 
             notifyDataSetChanged();
@@ -120,10 +126,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
                 mDatabase.changeItemCount(mRealm, mFoodList.get(position), counter);
             }
 
-            String fullPrice = Utils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
+            String fullPrice = StringUtils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
             mPriceOrderButton.setText(fullPrice);
 
             notifyDataSetChanged();
+
+            if (mFoodList.isEmpty()) {
+                showNoOrderMessage();
+            }
             return;
         }
         if (v.getId() == R.id.button_delete_item_from_order) {
@@ -135,12 +145,28 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
             int position = mRecycler.getChildLayoutPosition(rootView);
             mDatabase.deleteItemFromOrder(mRealm, mFoodList.get(position));
 
-            String fullPrice = Utils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
+            String fullPrice = StringUtils.priceFormatter(mDatabase.getCurrentOrder(mRealm).getFullPrice());
             mPriceOrderButton.setText(fullPrice);
 
             notifyDataSetChanged();
+            if (mFoodList.isEmpty()) {
+                showNoOrderMessage();
+            }
+
             return;
         }
+    }
+
+    private void showNoOrderMessage() {
+        mRecycler.setVisibility(View.GONE);
+        mConfirmOrderButton.setVisibility(View.GONE);
+        mPriceOrderButton.setVisibility(View.GONE);
+        mNoOrderContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showOrderList() {
+        mNoOrderContainer.setVisibility(View.GONE);
+        mRecycler.setVisibility(View.VISIBLE);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

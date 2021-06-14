@@ -16,13 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.services.RealmService;
-import com.allteran.pizzamira.ui.LoginActivity;
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.allteran.pizzamira.ui.order.OrderActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Random;
 
 import io.realm.Realm;
 
@@ -43,15 +39,23 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        //TODO: dont forget to remove test buttons in alpha release
         AppCompatButton deleteRealmButton = view.findViewById(R.id.button_delete_realm);
         deleteRealmButton.setOnClickListener(v -> {
             RealmService.deleteDatabase();
             Log.d(TAG, "realm database deleted");
             Toast.makeText(getActivity(), "Realm database deleted", Toast.LENGTH_SHORT).show();
         });
+        AppCompatButton showMapButton = view.findViewById(R.id.button_map);
+        showMapButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), OrderActivity.class);
+            startActivity(intent);
+
+        });
+
+
         RealmService realmService = new RealmService(getActivity());
-        realmService.showBadge(Realm.getDefaultInstance());
+        realmService.showCartBadge(Realm.getDefaultInstance());
 
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {

@@ -21,7 +21,6 @@
             android:id="@+id/empty_cart_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/oval_drawable"
             android:text="@string/empty_cart_message"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,6 +32,7 @@
             android:id="@+id/open_menu_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/oval_drawable"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
             android:text="МЕНЮ" />

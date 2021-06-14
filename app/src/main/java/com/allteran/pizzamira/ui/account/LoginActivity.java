@@ -1,4 +1,4 @@
-package com.allteran.pizzamira.ui;
+package com.allteran.pizzamira.ui.account;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +26,8 @@ import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.services.FirebaseService;
+import com.allteran.pizzamira.ui.MainActivity;
+import com.allteran.pizzamira.util.Const;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -155,6 +157,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                        intent.putExtra(Const.KEY_FROM_LOGIN, getIntent().getStringExtra(Const.KEY_FROM_LOGIN));
                                         startActivity(intent);
                                     }
 

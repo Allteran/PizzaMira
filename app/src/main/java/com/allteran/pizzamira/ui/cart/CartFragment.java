@@ -22,10 +22,8 @@ import com.allteran.pizzamira.adapters.CartAdapter;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.services.RealmService;
-import com.allteran.pizzamira.util.Utils;
+import com.allteran.pizzamira.util.StringUtils;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Objects;
 
 import io.realm.Realm;
 
@@ -71,6 +69,10 @@ public class CartFragment extends Fragment implements View.OnClickListener {
         mProgressBar.setVisibility(View.VISIBLE);
         mRecycler.setVisibility(View.GONE);
 
+        mMenuButton.setOnClickListener(v ->
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
+                        .navigate(R.id.navigation_menu));
+
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
@@ -85,22 +87,21 @@ public class CartFragment extends Fragment implements View.OnClickListener {
             displayNoOrderMessage();
         } else {
             CartAdapter adapter = new CartAdapter(order.getFoodList(), fm, mRecycler, getActivity(),
-                    mPriceOrderButton);
+                    mPriceOrderButton, mConfirmOrderButton, mProgressBar, mNoOrderContainer);
             mRecycler.setAdapter(adapter);
             mRecycler.setVisibility(View.VISIBLE);
             mNoOrderContainer.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
         }
-        String fullPrice = Utils.priceFormatter(order.getFullPrice());
+        String fullPrice = StringUtils.priceFormatter(order.getFullPrice());
         mPriceOrderButton.setText(fullPrice);
     }
 
     private void displayNoOrderMessage() {
         mProgressBar.setVisibility(View.GONE);
         mNoOrderContainer.setVisibility(View.VISIBLE);
-        mMenuButton.setOnClickListener(v ->
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment)
-                        .navigate(R.id.navigation_menu));
+        mPriceOrderButton.setVisibility(View.GONE);
+        mConfirmOrderButton.setVisibility(View.GONE);
     }
 
     @Override
