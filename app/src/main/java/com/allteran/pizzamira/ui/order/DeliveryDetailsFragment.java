@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -140,6 +141,8 @@ public class DeliveryDetailsFragment extends Fragment {
             }
         });
 
+        mCashRadio.setOnCheckedChangeListener((buttonView, isChecked) -> mInputChange.setEnabled(isChecked));
+
         mConfirmButton.setOnClickListener(v -> {
             if (validateFields()) {
                 Toast.makeText(getActivity(), "Its all ok", Toast.LENGTH_SHORT).show();
@@ -168,7 +171,7 @@ public class DeliveryDetailsFragment extends Fragment {
             mInputEntrance.requestFocus();
             return false;
         }
-        if(mInputIntercom.getText().toString().trim().equals("")) {
+        if (mInputIntercom.getText().toString().trim().equals("")) {
             mInputIntercom.setError(NO_DATA_MESSAGE);
             mInputIntercom.requestFocus();
             return false;
