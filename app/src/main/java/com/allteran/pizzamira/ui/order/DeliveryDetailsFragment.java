@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -13,14 +14,24 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.allteran.pizzamira.R;
+import com.allteran.pizzamira.model.Order;
+import com.allteran.pizzamira.model.User;
+import com.allteran.pizzamira.services.FirebaseService;
+import com.allteran.pizzamira.services.RealmService;
+import com.allteran.pizzamira.util.Const;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
+
+import io.realm.Realm;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +45,11 @@ public class DeliveryDetailsFragment extends Fragment {
     private EditText mInputBuilding;
     private EditText mInputEntrance;
     private EditText mInputIntercom;
+    private EditText mInputFloor;
     private EditText mInputApp;
+
+    private EditText mInputNumberOfPeople;
+    private EditText mInputComment;
 
     private EditText mInputFirstName;
     private EditText mInputSecondName;
@@ -47,14 +62,16 @@ public class DeliveryDetailsFragment extends Fragment {
 
     private AppCompatButton mConfirmButton;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ProgressBar mProgress;
+    private ConstraintLayout mMainContainer;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_ORDER_ID = "arg_order_id";
+
+    private String mOrderId;
+
+    private FirebaseService mFirebaseService;
+    private RealmService mRealmService;
+    private Realm mRealm;
 
     public DeliveryDetailsFragment() {
         // Required empty public constructor
@@ -64,16 +81,13 @@ public class DeliveryDetailsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param orderId Parameter 1.
      * @return A new instance of fragment AddAddressFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static DeliveryDetailsFragment newInstance(String param1, String param2) {
+    public static DeliveryDetailsFragment newInstance(String orderId) {
         DeliveryDetailsFragment fragment = new DeliveryDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_ORDER_ID, orderId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,15 +96,16 @@ public class DeliveryDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mOrderId = getArguments().getString(ARG_ORDER_ID);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        mFirebaseService = new FirebaseService(FirebaseDatabase.getInstance());
+        mRealm = Realm.getDefaultInstance();
+        mRealmService = new RealmService();
         return inflater.inflate(R.layout.fragment_delivery_details, container, false);
     }
 
@@ -102,7 +117,11 @@ public class DeliveryDetailsFragment extends Fragment {
         mInputBuilding = view.findViewById(R.id.input_building);
         mInputEntrance = view.findViewById(R.id.input_entrance);
         mInputIntercom = view.findViewById(R.id.input_intercom);
+        mInputFloor = view.findViewById(R.id.input_floor);
         mInputApp = view.findViewById(R.id.input_app);
+
+        mInputNumberOfPeople = view.findViewById(R.id.input_number_of_people);
+        mInputComment = view.findViewById(R.id.input_customer_comment);
 
         mInputFirstName = view.findViewById(R.id.input_first_name);
         mInputSecondName = view.findViewById(R.id.input_second_name);
@@ -114,6 +133,35 @@ public class DeliveryDetailsFragment extends Fragment {
         mCardRadio = view.findViewById(R.id.radio_paytype_card);
 
         mConfirmButton = view.findViewById(R.id.button_confirm_delivery);
+
+        mMainContainer = view.findViewById(R.id.main_container);
+
+        mProgress = view.findViewById(R.id.progress_bar_delivery);
+
+        //now we are going to find if user is logged and if it - we are gonna push data from user to exact fields
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser != null) {
+            mProgress.setVisibility(View.VISIBLE);
+            mMainContainer.setVisibility(View.GONE);
+            mFirebaseService.findUserById(fUser.getPhoneNumber(), new FirebaseService.UserDataStatus() {
+                @Override
+                public void dataIsLoaded(User user) {
+                    fillFieldsFromUser(user);
+                    mProgress.setVisibility(View.GONE);
+                    mMainContainer.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onLoadError(@NonNull @NotNull DatabaseError error) {
+                    mProgress.setVisibility(View.GONE);
+                    mMainContainer.setVisibility(View.VISIBLE);
+                }
+            });
+        } else {
+            mMainContainer.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.GONE);
+        }
+
 
         mInputStreet.requestFocus();
 
@@ -145,7 +193,29 @@ public class DeliveryDetailsFragment extends Fragment {
 
         mConfirmButton.setOnClickListener(v -> {
             if (validateFields()) {
-                Toast.makeText(getActivity(), "Its all ok", Toast.LENGTH_SHORT).show();
+                Order order = new Order();
+                order.setStreetName(mInputStreet.getText().toString().trim());
+                order.setBuildingNo(mInputBuilding.getText().toString().trim());
+                order.setEntrance(Integer.parseInt(mInputEntrance.getText().toString().trim()));
+                order.setIntercom(mInputIntercom.getText().toString().trim());
+                order.setFloorNo(Integer.parseInt(mInputFloor.getText().toString().trim()));
+                order.setAppNo(Integer.parseInt(mInputApp.getText().toString().trim()));
+
+                order.setCustomerFirstName(mInputFirstName.getText().toString().trim());
+                order.setCustomerSecondName(mInputSecondName.getText().toString().trim());
+
+                order.setNumberOfPersons(Integer.parseInt(mInputNumberOfPeople.getText().toString().trim()));
+                order.setUserComment(mInputComment.getText().toString().trim());
+
+                if (mCashRadio.isChecked()) {
+                    order.setPayType(Const.PAY_CASH);
+                    order.setChange(Integer.parseInt(mInputChange.getText().toString().trim()));
+                }
+                if (mCardRadio.isChecked()) {
+                    order.setPayType(Const.PAY_CARD);
+                }
+
+                mRealmService.updateOrderDetails(mRealm, order);
             }
         });
 
@@ -202,6 +272,32 @@ public class DeliveryDetailsFragment extends Fragment {
                 return false;
             }
         }
+        if (mInputNumberOfPeople.getText().toString().equals("") || mInputNumberOfPeople.getText().toString().equals("")) {
+            mInputNumberOfPeople.setError(NO_DATA_MESSAGE);
+            mInputNumberOfPeople.requestFocus();
+            return false;
+        }
         return true;
+    }
+
+    private void fillFieldsFromUser(User user) {
+        if (user.getStreet() != null) {
+            mInputStreet.setText(user.getStreet());
+        }
+        if (user.getBuildNo() != null) {
+            mInputBuilding.setText(user.getBuildNo());
+        }
+        if (user.getAppNo() != 0) {
+            mInputApp.setText(user.getAppNo());
+        }
+        if (user.getFirstName() != null) {
+            mInputFirstName.setText(user.getFirstName());
+        }
+        if (user.getSecondName() != null) {
+            mInputSecondName.setText(user.getSecondName());
+        }
+        if (user.getPhone() != null) {
+            mInputPhone.setText(user.getPhone());
+        }
     }
 }

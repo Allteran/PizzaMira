@@ -35,21 +35,11 @@ public class MenuViewModel extends ViewModel {
 
         FirebaseService mDatabaseService = new FirebaseService(FirebaseDatabase.getInstance());
 
-        mDatabaseService.loadFoodList(new FirebaseService.DataStatus() {
+        mDatabaseService.loadFoodList(new FirebaseService.FoodDataStatus() {
             @Override
             public void dataIsLoaded(List<FoodItem> foodList) {
                 foodItems[0] = foodList;
                 Log.d(TAG, "dataIsLoaded");
-            }
-
-            @Override
-            public void dataIsLoaded(User user) {
-
-            }
-
-            @Override
-            public void dataIsLoaded(Order order) {
-
             }
 
             @Override

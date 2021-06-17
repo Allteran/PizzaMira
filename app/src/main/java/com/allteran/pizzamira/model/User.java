@@ -2,14 +2,11 @@ package com.allteran.pizzamira.model;
 
 import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 public class User  {
     private String id;
     private String phone;
-    private String name;
+    private String firstName;
+    private String secondName;
     private Role role;
     private String city;
     private String street;
@@ -30,12 +27,20 @@ public class User  {
         this.phone = phone;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public List<String> getOrderHistoryIds() {

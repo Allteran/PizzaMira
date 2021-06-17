@@ -10,145 +10,429 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/label_add_address"
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/progress_bar_delivery"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/label_add_address"
-            android:textSize="@dimen/title_default_size"
-            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/city_container"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/label_add_address">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/label_city"
+                android:id="@+id/label_add_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:padding="@dimen/default_padding"
-                android:text="@string/label_city"
-                android:textSize="18sp"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="@string/label_add_address"
+                android:textSize="@dimen/title_default_size"
+                android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/label_add_address" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/input_city_name"
+            <LinearLayout
+                android:id="@+id/city_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:enabled="false"
-                android:padding="@dimen/default_padding"
-                android:text="Северодвинск"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/street_address_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/city_container">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:weightSum="10"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_add_address">
 
                 <TextView
-                    android:id="@+id/label_street"
+                    android:id="@+id/label_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:padding="@dimen/default_padding"
+                    android:text="@string/label_city"
+                    android:textSize="18sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/label_add_address" />
+
+                <EditText
+                    android:id="@+id/input_city_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:enabled="false"
+                    android:padding="@dimen/default_padding"
+                    android:text="Северодвинск"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/street_address_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/city_container">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_street"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Улица" />
+
+                    <EditText
+                        android:id="@+id/input_street"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="Улица"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_building"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Номер" />
+
+                    <EditText
+                        android:id="@+id/input_building"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="5"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_entrance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Подъезд" />
+
+                    <EditText
+                        android:id="@+id/input_entrance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_address_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/street_address_container">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_intercom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Домофон" />
+
+                    <EditText
+                        android:id="@+id/input_intercom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_floor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Этаж" />
+
+                    <EditText
+                        android:id="@+id/input_floor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_app"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Квартира" />
+
+                    <EditText
+                        android:id="@+id/input_app"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/label_contact_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="@string/label_contact_info"
+                android:textSize="@dimen/title_default_size"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/app_address_container" />
+
+            <LinearLayout
+                android:id="@+id/customer_name_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_contact_info">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_first_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Имя" />
+
+                    <EditText
+                        android:id="@+id/input_first_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_second_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingTop="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding"
+                        android:text="Фамилия" />
+
+                    <EditText
+                        android:id="@+id/input_second_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="@dimen/default_padding"
+                        android:paddingEnd="@dimen/default_padding" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/customer_phone_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_name_container">
+
+                <TextView
+                    android:id="@+id/label_customer_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingEnd="@dimen/default_padding"
-                    android:text="Улица" />
+                    android:text="Контактный телефон" />
 
                 <EditText
-                    android:id="@+id/input_street"
+                    android:id="@+id/input_customer_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Улица"
+                    android:digits="0123456789+"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:inputType="phone"
+                    android:maxLength="12"
                     android:maxLines="1"
                     android:paddingStart="@dimen/default_padding"
                     android:paddingEnd="@dimen/default_padding" />
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/label_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="@string/label_payment"
+                android:textSize="@dimen/title_default_size"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_phone_container" />
+
+            <TextView
+                android:id="@+id/payment_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/default_padding"
+                android:paddingEnd="@dimen/default_padding"
+                android:paddingBottom="@dimen/default_padding"
+                android:text="Выберите способ оплаты заказа. Оплата производится при получении заказа непосредственно курьеру"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_payment" />
+
+            <RadioGroup
+                android:id="@+id/paytype_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical">
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/payment_message">
+
+                <RadioButton
+                    android:id="@+id/radio_paytype_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:padding="@dimen/default_padding"
+                    android:text="Карта" />
+
+                <RadioButton
+                    android:id="@+id/radio_paytype_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="Наличные" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/change_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/paytype_group"
+                app:layout_constraintStart_toEndOf="@+id/paytype_group">
 
                 <TextView
-                    android:id="@+id/label_building"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/label_change"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingEnd="@dimen/default_padding"
-                    android:text="Номер" />
+                    android:text="Купюра (для сдачи):" />
 
                 <EditText
-                    android:id="@+id/input_building"
+                    android:id="@+id/input_change"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLength="5"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/default_padding"
-                    android:paddingEnd="@dimen/default_padding" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/app_address_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="12"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/street_address_container">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/label_entrance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/default_padding"
-                    android:paddingTop="@dimen/default_padding"
-                    android:paddingEnd="@dimen/default_padding"
-                    android:text="Подъезд" />
-
-                <EditText
-                    android:id="@+id/input_entrance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:maxLines="1"
@@ -156,254 +440,90 @@
                     android:paddingEnd="@dimen/default_padding" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/label_order_details"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="@string/label_order_details"
+                android:textSize="@dimen/title_default_size"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/paytype_group" />
+
+            <LinearLayout
+                android:id="@+id/number_of_people_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_order_details">
 
                 <TextView
-                    android:id="@+id/label_intercom"
+                    android:id="@+id/label_number_of_people"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingEnd="@dimen/default_padding"
-                    android:text="Домофон" />
+                    android:text="Количество персон" />
 
                 <EditText
-                    android:id="@+id/input_intercom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/default_padding"
-                    android:paddingEnd="@dimen/default_padding" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/label_app"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/default_padding"
-                    android:paddingTop="@dimen/default_padding"
-                    android:paddingEnd="@dimen/default_padding"
-                    android:text="Квартира" />
-
-                <EditText
-                    android:id="@+id/input_app"
+                    android:id="@+id/input_number_of_people"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="number"
+                    android:maxLength="2"
                     android:maxLines="1"
                     android:paddingStart="@dimen/default_padding"
-                    android:paddingEnd="@dimen/default_padding" />
+                    android:paddingEnd="@dimen/default_padding"
+                    android:text="1" />
             </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/label_contact_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/label_contact_info"
-            android:textSize="@dimen/title_default_size"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_address_container" />
-
-        <LinearLayout
-            android:id="@+id/customer_name_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/label_contact_info">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/customer_comment_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/number_of_people_container">
 
                 <TextView
-                    android:id="@+id/label_first_name"
+                    android:id="@+id/lable_customer_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingEnd="@dimen/default_padding"
-                    android:text="Имя" />
+                    android:text="Комментарий к заказу" />
 
                 <EditText
-                    android:id="@+id/input_first_name"
+                    android:id="@+id/input_customer_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:maxLines="1"
                     android:paddingStart="@dimen/default_padding"
                     android:paddingEnd="@dimen/default_padding" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/label_second_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/default_padding"
-                    android:paddingTop="@dimen/default_padding"
-                    android:paddingEnd="@dimen/default_padding"
-                    android:text="Фамилия" />
-
-                <EditText
-                    android:id="@+id/input_second_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/default_padding"
-                    android:paddingEnd="@dimen/default_padding" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/customer_phone_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customer_name_container">
-
-            <TextView
-                android:id="@+id/label_customer_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="@dimen/default_padding"
-                android:paddingTop="@dimen/default_padding"
-                android:paddingEnd="@dimen/default_padding"
-                android:text="Контактный телефон" />
-
-            <EditText
-                android:id="@+id/input_customer_phone"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_confirm_delivery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:digits="0123456789+"
-                android:imeOptions="actionNext"
-                android:inputType="phone"
-                android:maxLength="12"
-                android:maxLines="1"
-                android:paddingStart="@dimen/default_padding"
-                android:paddingEnd="@dimen/default_padding" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/label_payment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/label_payment"
-            android:textSize="@dimen/title_default_size"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customer_phone_container" />
-
-        <TextView
-            android:id="@+id/payment_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/default_padding"
-            android:paddingEnd="@dimen/default_padding"
-            android:paddingBottom="@dimen/default_padding"
-            android:text="Выберите способ оплаты заказа. Оплата производится при получении заказа непосредственно курьеру"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/label_payment" />
-
-        <RadioGroup
-            android:id="@+id/paytype_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/payment_message">
-
-            <RadioButton
-                android:id="@+id/radio_paytype_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:padding="@dimen/default_padding"
-                android:text="Карта" />
-
-            <RadioButton
-                android:id="@+id/radio_paytype_cash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/default_padding"
-                android:text="Наличные" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:id="@+id/change_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/paytype_group"
-            app:layout_constraintStart_toEndOf="@+id/paytype_group">
-
-            <TextView
-                android:id="@+id/label_change"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="@dimen/default_padding"
-                android:paddingTop="@dimen/default_padding"
-                android:paddingEnd="@dimen/default_padding"
-                android:text="Купюра (для сдачи):" />
-
-            <EditText
-                android:id="@+id/input_change"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLines="1"
-                android:paddingStart="@dimen/default_padding"
-                android:paddingEnd="@dimen/default_padding" />
-        </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_confirm_delivery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:background="@drawable/oval_drawable"
-            android:text="Продолжить"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/paytype_group" />
+                android:layout_margin="15dp"
+                android:background="@drawable/oval_drawable"
+                android:text="Продолжить"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_comment_container" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

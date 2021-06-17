@@ -32,5 +32,7 @@
     <string name="label_city">Город</string>
     <string name="label_contact_info">Контактная информация</string>
     <string name="label_payment">Оплата заказа</string>
+    <string name="label_order_details">Детали заказа</string>
+    <string name="label_order_confirmation">Подтверждение заказа</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

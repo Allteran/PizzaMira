@@ -1,5 +1,6 @@
 package com.allteran.pizzamira.ui.cart;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.allteran.pizzamira.adapters.CartAdapter;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.services.FirebaseService;
 import com.allteran.pizzamira.services.RealmService;
+import com.allteran.pizzamira.ui.order.OrderActivity;
 import com.allteran.pizzamira.util.StringUtils;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -34,8 +36,6 @@ public class CartFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView mRecycler;
 
-    private FirebaseService mFirebase;
-
     private ProgressBar mProgressBar;
     private LinearLayout mNoOrderContainer;
     private AppCompatButton mMenuButton;
@@ -46,7 +46,6 @@ public class CartFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mFirebase = new FirebaseService(FirebaseDatabase.getInstance());
         return inflater.inflate(R.layout.fragment_cart, container, false);
     }
 
@@ -92,9 +91,9 @@ public class CartFragment extends Fragment implements View.OnClickListener {
             mRecycler.setVisibility(View.VISIBLE);
             mNoOrderContainer.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
+            String fullPrice = StringUtils.priceFormatter(order.getFullPrice());
+            mPriceOrderButton.setText(fullPrice);
         }
-        String fullPrice = StringUtils.priceFormatter(order.getFullPrice());
-        mPriceOrderButton.setText(fullPrice);
     }
 
     private void displayNoOrderMessage() {
@@ -107,7 +106,8 @@ public class CartFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.button_confirm_order || v.getId() == R.id.button_price_order) {
-
+            Intent intent = new Intent(getActivity(), OrderActivity.class);
+            startActivity(intent);
         }
     }
 }

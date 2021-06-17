@@ -125,7 +125,7 @@ public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void loadMenu() {
-        mDatabaseService.loadFoodList(new FirebaseService.DataStatus() {
+        mDatabaseService.loadFoodList(new FirebaseService.FoodDataStatus() {
             @Override
             public void dataIsLoaded(List<FoodItem> foodList) {
                 mMenuAdapter = new MenuAdapter(getContext(), mFragmentManager, mRecycler,
@@ -135,15 +135,6 @@ public class MenuFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 mSwipeRefresh.setRefreshing(false);
             }
 
-            @Override
-            public void dataIsLoaded(User user) {
-
-            }
-
-            @Override
-            public void dataIsLoaded(Order order) {
-
-            }
 
             @Override
             public void onLoadError(@NonNull @NotNull DatabaseError error) {

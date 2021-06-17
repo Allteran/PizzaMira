@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
+import com.allteran.pizzamira.util.Const;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -220,13 +221,43 @@ public class RealmService {
         }
     }
 
+    public void updateOrderDetails(Realm realm, Order order) {
+        Log.d(TAG, "updateOrderDetails");
+        realm.beginTransaction();
+
+        Order rOrder = realm.where(Order.class).findFirst();
+        rOrder.setCustomerFirstName(order.getCustomerFirstName());
+        rOrder.setCustomerSecondName(order.getCustomerSecondName());
+
+        rOrder.setStreetName(order.getStreetName());
+        rOrder.setBuildingNo(order.getBuildingNo());
+        rOrder.setEntrance(order.getEntrance());
+        rOrder.setIntercom(order.getIntercom());
+        rOrder.setFloorNo(order.getFloorNo());
+        rOrder.setAppNo(order.getAppNo());
+
+        rOrder.setNumberOfPersons(rOrder.getNumberOfPersons());
+        rOrder.setUserComment(order.getUserComment());
+
+        rOrder.setPayType(order.getPayType());
+        if (order.getPayType().equals(Const.PAY_CASH)) {
+            rOrder.setChange(order.getChange());
+        }
+
+        realm.commitTransaction();
+
+        Log.d(TAG, "orderDetails: done");
+    }
+
     /**
      * This will show cart badge when app starts in case when there was unfinished order
      */
     public void showCartBadge(Realm realm) {
         realm.beginTransaction();
         Order order = realm.where(Order.class).findFirst();
-        updateCartBadgeCount(order, mActivity);
+        if (order != null) {
+            updateCartBadgeCount(order, mActivity);
+        }
         realm.commitTransaction();
     }
 }

@@ -9,20 +9,31 @@ import io.realm.RealmObject;
 
 public class Order extends RealmObject {
     private String id;
+
     private String userId;
+    private String customerFirstName;
+    private String customerSecondName;
+
     private RealmList<FoodItem> foodList;
     private int fullPrice;
-    private OrderStatus status;
+
+    private String status; //store only status ID
     private String payType;
+
     private Date creationDate;
     private Date payDate;
+
     private String streetName; // name of street for order to deliver
     private String buildingNo; // number of building including slash or dashes like '4/25'
+    private int entrance;
+    private String intercom;
     private int appNo; // number of appartaments
     private int floorNo; // number of floor
+
     private String userComment;
     private String operatorComment; // for emergency comment from operator
     private int numberOfPersons;
+    private int change;
 
     public Order() {
     }
@@ -31,7 +42,7 @@ public class Order extends RealmObject {
         this.id = id;
         this.userId = userId;
         this.fullPrice = fullPrice;
-        this.status = new OrderStatus(Const.ID_ORDER_STATUS_NEW, Const.ORDER_STATUS_NEW);
+        this.status = Const.ID_ORDER_STATUS_NEW;
         this.creationDate = new Date();
         this.foodList = new RealmList<>();
     }
@@ -52,6 +63,22 @@ public class Order extends RealmObject {
         this.userId = userId;
     }
 
+    public String getCustomerFirstName() {
+        return customerFirstName;
+    }
+
+    public void setCustomerFirstName(String customerFirstName) {
+        this.customerFirstName = customerFirstName;
+    }
+
+    public String getCustomerSecondName() {
+        return customerSecondName;
+    }
+
+    public void setCustomerSecondName(String secondName) {
+        this.customerSecondName = secondName;
+    }
+
     public RealmList<FoodItem> getFoodList() {
         return foodList;
     }
@@ -68,11 +95,11 @@ public class Order extends RealmObject {
         this.fullPrice = fullPrice;
     }
 
-    public OrderStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -110,6 +137,26 @@ public class Order extends RealmObject {
 
     public void setBuildingNo(String buildingNo) {
         this.buildingNo = buildingNo;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public int getEntrance() {
+        return entrance;
+    }
+
+    public void setEntrance(int entrance) {
+        this.entrance = entrance;
+    }
+
+    public String getIntercom() {
+        return intercom;
+    }
+
+    public void setIntercom(String intercom) {
+        this.intercom = intercom;
     }
 
     public int getAppNo() {
@@ -150,5 +197,13 @@ public class Order extends RealmObject {
 
     public void setNumberOfPersons(int numberOfPersons) {
         this.numberOfPersons = numberOfPersons;
+    }
+
+    public int getChange() {
+        return change;
+    }
+
+    public void setChange(int change) {
+        this.change = change;
     }
 }

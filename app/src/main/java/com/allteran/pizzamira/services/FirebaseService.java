@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
+import com.allteran.pizzamira.model.Role;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.util.Const;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,11 +26,20 @@ public class FirebaseService {
 
     private DatabaseReference mReference;
 
-    public interface DataStatus {
-        void dataIsLoaded(List<FoodItem> foodList);
 
+    public interface UserDataStatus {
         void dataIsLoaded(User user);
 
+        void onLoadError(@NonNull DatabaseError error);
+    }
+
+    public interface FoodDataStatus {
+        void dataIsLoaded(List<FoodItem> foodList);
+
+        void onLoadError(@NonNull DatabaseError error);
+    }
+
+    public interface OrderDataStatus {
         void dataIsLoaded(Order order);
 
         void onLoadError(@NonNull DatabaseError error);
@@ -47,10 +57,11 @@ public class FirebaseService {
         User user = new User();
         user.setId(firebaseUser.getUid());
         user.setPhone(firebaseUser.getPhoneNumber());
+        user.setRole(new Role(Role.ID_CUSTOMER, Role.NAME_CUSTOMER));
         mReference.child(Const.DB_TREE_USERS).child(firebaseUser.getUid()).setValue(user);
     }
 
-    public void loadFoodList(final DataStatus dataStatus) {
+    public void loadFoodList(final FoodDataStatus dataStatus) {
         List<FoodItem> foodList = new ArrayList<>();
         mReference.child(Const.DB_TREE_FOODLIST_FAKE).addValueEventListener(new ValueEventListener() {
             @Override
@@ -72,7 +83,7 @@ public class FirebaseService {
         });
     }
 
-    public void getFoodListByIds(List<String> foodListIds, final DataStatus dataStatus) {
+    public void getFoodListByIds(List<String> foodListIds, final FoodDataStatus dataStatus) {
         List<FoodItem> foodList = new ArrayList<>();
         mReference.child(Const.DB_TREE_FOODLIST_FAKE).addValueEventListener(new ValueEventListener() {
             @Override
@@ -100,16 +111,13 @@ public class FirebaseService {
         });
     }
 
-    public void findUserById(String userId, final DataStatus dataStatus) {
-        mReference.child(Const.DB_TREE_USERS).child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    User user = task.getResult().getValue(User.class);
-                    dataStatus.dataIsLoaded(user);
-                } else {
-                    Log.e(TAG, "finduserById: task is failed", task.getException());
-                }
+    public void findUserById(String userId, final UserDataStatus dataStatus) {
+        mReference.child(Const.DB_TREE_USERS).child(userId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                User user = task.getResult().getValue(User.class);
+                dataStatus.dataIsLoaded(user);
+            } else {
+                Log.e(TAG, "finduserById: task is failed", task.getException());
             }
         });
     }
