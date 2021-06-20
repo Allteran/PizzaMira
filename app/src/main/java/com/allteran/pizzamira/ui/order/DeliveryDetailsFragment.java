@@ -1,13 +1,6 @@
 package com.allteran.pizzamira.ui.order;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
@@ -17,6 +10,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.model.Order;
@@ -41,6 +43,7 @@ import io.realm.Realm;
 public class DeliveryDetailsFragment extends Fragment {
     private static final String NO_DATA_MESSAGE = "Внесите данные";
 
+    private EditText mInputCity;
     private EditText mInputStreet;
     private EditText mInputBuilding;
     private EditText mInputEntrance;
@@ -113,6 +116,7 @@ public class DeliveryDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mInputCity = view.findViewById(R.id.input_city_name);
         mInputStreet = view.findViewById(R.id.input_street);
         mInputBuilding = view.findViewById(R.id.input_building);
         mInputEntrance = view.findViewById(R.id.input_entrance);
@@ -137,6 +141,17 @@ public class DeliveryDetailsFragment extends Fragment {
         mMainContainer = view.findViewById(R.id.main_container);
 
         mProgress = view.findViewById(R.id.progress_bar_delivery);
+
+        final int[] fakeDataCounter = {0};
+        TextView labelAddAddress = view.findViewById(R.id.label_add_address);
+
+        labelAddAddress.setOnClickListener(l -> {
+            fakeDataCounter[0] = fakeDataCounter[0] + 1;
+            if (fakeDataCounter[0] == 3) {
+                fillFieldsWithFakeData();
+                Toast.makeText(getActivity(), "Secret code activated: fake data fill", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //now we are going to find if user is logged and if it - we are gonna push data from user to exact fields
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -194,6 +209,7 @@ public class DeliveryDetailsFragment extends Fragment {
         mConfirmButton.setOnClickListener(v -> {
             if (validateFields()) {
                 Order order = new Order();
+                order.setCity(mInputCity.getText().toString().trim());
                 order.setStreetName(mInputStreet.getText().toString().trim());
                 order.setBuildingNo(mInputBuilding.getText().toString().trim());
                 order.setEntrance(Integer.parseInt(mInputEntrance.getText().toString().trim()));
@@ -201,6 +217,7 @@ public class DeliveryDetailsFragment extends Fragment {
                 order.setFloorNo(Integer.parseInt(mInputFloor.getText().toString().trim()));
                 order.setAppNo(Integer.parseInt(mInputApp.getText().toString().trim()));
 
+                order.setUserPhone(mInputPhone.getText().toString().trim());
                 order.setCustomerFirstName(mInputFirstName.getText().toString().trim());
                 order.setCustomerSecondName(mInputSecondName.getText().toString().trim());
 
@@ -212,13 +229,31 @@ public class DeliveryDetailsFragment extends Fragment {
                     order.setChange(Integer.parseInt(mInputChange.getText().toString().trim()));
                 }
                 if (mCardRadio.isChecked()) {
+                    order.setChange(0);
                     order.setPayType(Const.PAY_CARD);
                 }
 
                 mRealmService.updateOrderDetails(mRealm, order);
+
+                Fragment confirmOrderFragment = OrderConfirmFragment.newInstance("asd", "asds");
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.order_host_fragment, confirmOrderFragment);
+                ft.commit();
             }
         });
 
+    }
+
+    private void fillFieldsWithFakeData() {
+        mInputStreet.setText("пр-кт Ленина");
+        mInputBuilding.setText("50А");
+        mInputEntrance.setText("1");
+        mInputIntercom.setText("Нет");
+        mInputFloor.setText("1");
+        mInputApp.setText("25");
+        mInputFirstName.setText("Елизавета");
+        mInputSecondName.setText("Белоцерковская");
+        mInputPhone.setText("+79021335276");
     }
 
     /**

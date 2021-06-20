@@ -53,7 +53,6 @@ public class HomeFragment extends Fragment {
 
         });
 
-
         RealmService realmService = new RealmService(getActivity());
         realmService.showCartBadge(Realm.getDefaultInstance());
 

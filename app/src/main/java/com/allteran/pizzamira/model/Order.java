@@ -10,7 +10,7 @@ import io.realm.RealmObject;
 public class Order extends RealmObject {
     private String id;
 
-    private String userId;
+    private String userPhone;
     private String customerFirstName;
     private String customerSecondName;
 
@@ -23,6 +23,7 @@ public class Order extends RealmObject {
     private Date creationDate;
     private Date payDate;
 
+    private String city;
     private String streetName; // name of street for order to deliver
     private String buildingNo; // number of building including slash or dashes like '4/25'
     private int entrance;
@@ -38,9 +39,9 @@ public class Order extends RealmObject {
     public Order() {
     }
 
-    public Order(String id, String userId, int fullPrice) {
+    public Order(String id, String userPhone, int fullPrice) {
         this.id = id;
-        this.userId = userId;
+        this.userPhone = userPhone;
         this.fullPrice = fullPrice;
         this.status = Const.ID_ORDER_STATUS_NEW;
         this.creationDate = new Date();
@@ -55,12 +56,12 @@ public class Order extends RealmObject {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public String getCustomerFirstName() {
@@ -121,6 +122,14 @@ public class Order extends RealmObject {
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getStreetName() {

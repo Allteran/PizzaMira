@@ -21,9 +21,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="SHOW MAP"
+        android:text="CONFIRM ORDER"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/button_delete_realm" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -212,7 +212,6 @@ public class RealmService {
         for (FoodItem item : order.getFoodList()) {
             badgeCount = badgeCount + item.getCountInCart();
         }
-        Log.d(TAG, "updateBadge: badgeCount = " + badgeCount);
         badge.setNumber(badgeCount);
         badge.setVisible(true, true);
 
@@ -222,13 +221,14 @@ public class RealmService {
     }
 
     public void updateOrderDetails(Realm realm, Order order) {
-        Log.d(TAG, "updateOrderDetails");
         realm.beginTransaction();
 
         Order rOrder = realm.where(Order.class).findFirst();
         rOrder.setCustomerFirstName(order.getCustomerFirstName());
         rOrder.setCustomerSecondName(order.getCustomerSecondName());
+        rOrder.setUserPhone(order.getUserPhone());
 
+        rOrder.setCity(order.getCity());
         rOrder.setStreetName(order.getStreetName());
         rOrder.setBuildingNo(order.getBuildingNo());
         rOrder.setEntrance(order.getEntrance());
@@ -236,7 +236,7 @@ public class RealmService {
         rOrder.setFloorNo(order.getFloorNo());
         rOrder.setAppNo(order.getAppNo());
 
-        rOrder.setNumberOfPersons(rOrder.getNumberOfPersons());
+        rOrder.setNumberOfPersons(order.getNumberOfPersons());
         rOrder.setUserComment(order.getUserComment());
 
         rOrder.setPayType(order.getPayType());
@@ -245,8 +245,6 @@ public class RealmService {
         }
 
         realm.commitTransaction();
-
-        Log.d(TAG, "orderDetails: done");
     }
 
     /**

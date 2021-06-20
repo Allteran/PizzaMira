@@ -15,9 +15,9 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
-        Fragment mapFragment = DeliveryDetailsFragment.newInstance("param1");
+        Fragment deliveryDetailsFragment = DeliveryDetailsFragment.newInstance("param1");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.order_host_fragment, mapFragment);
+        ft.replace(R.id.order_host_fragment, deliveryDetailsFragment);
         ft.commit();
     }
 }

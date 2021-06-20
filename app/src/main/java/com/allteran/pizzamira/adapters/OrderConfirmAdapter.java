@@ -30,37 +30,52 @@ public class OrderConfirmAdapter extends RecyclerView.Adapter<OrderConfirmAdapte
 
     @NotNull
     @Override
-    public OrderConfirmAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart_food, parent,
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_confirm_order_food, parent,
                 false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull OrderConfirmAdapter.ViewHolder holder, int position) {
-        FoodItem item = mFoodList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (position != mFoodList.size()) {
+            FoodItem item = mFoodList.get(position);
 
-        holder.name.setText(item.getName());
+            holder.name.setText(item.getName());
 
-        String quantity = item.getCountInCart() + " шт.";
-        holder.quantity.setText(quantity);
+            String quantity = item.getCountInCart() + " шт.";
+            holder.quantity.setText(quantity);
 
-        String price = StringUtils.priceFormatter(item.getCountInCart() * item.getPrice());
-        holder.price.setText(price);
+            String price = StringUtils.priceFormatter(item.getCountInCart() * item.getPrice());
+            holder.price.setText(price);
 
-        String weight = item.getWeight() * item.getCountInCart() + " гр.";
-        holder.weight.setText(weight);
+            String weight = item.getWeight() * item.getCountInCart() + " гр.";
+            holder.weight.setText(weight);
+        } else {
+            holder.name.setText("Итого");
+
+            int price = 0;
+            for (FoodItem foodItem : mFoodList) {
+                price = price + foodItem.getCountInCart() * foodItem.getPrice();
+            }
+            holder.weight.setVisibility(View.GONE);
+            holder.quantity.setVisibility(View.GONE);
+            holder.price.setText(StringUtils.priceFormatter(price));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mFoodList.size();
+        return mFoodList.size() + 1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView name, quantity, weight, price;
+        private TextView name;
+        private TextView quantity;
+        private TextView weight;
+        private TextView price;
 
-        public ViewHolder(@NonNull @NotNull View itemView) {
+        public ViewHolder(@NotNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             quantity = itemView.findViewById(R.id.quantity);

@@ -151,7 +151,5 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> im
             price = itemView.findViewById(R.id.food_item_price);
             textContainer = itemView.findViewById(R.id.food_item_text_container);
         }
-
-
     }
 }
