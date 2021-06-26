@@ -1,5 +1,8 @@
 package com.allteran.pizzamira.ui.order;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +50,12 @@ public class OrderConfirmFragment extends Fragment {
 
     private RecyclerView mRecycler;
     private AppCompatButton mConfirmOrderButton;
+    private AppCompatButton mReconnectButton;
+
+    private ConstraintLayout mMainContainer;
+    private ConstraintLayout mNoInternetContainer;
+
+    private AppCompatButton mResetNetworkButton;
 
     private RealmService mRealmService;
     private FirebaseService mFirebaseService;
@@ -86,6 +96,9 @@ public class OrderConfirmFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mMainContainer = view.findViewById(R.id.container_order_confirm);
+        mNoInternetContainer = view.findViewById(R.id.no_network_container);
+
         mCity = view.findViewById(R.id.city_name);
         mStreet = view.findViewById(R.id.street_name);
         mBuilding = view.findViewById(R.id.building);
@@ -99,6 +112,13 @@ public class OrderConfirmFragment extends Fragment {
         mNumberOfPeople = view.findViewById(R.id.number_of_people);
         mCustomerComment = view.findViewById(R.id.customer_comment);
         mConfirmOrderButton = view.findViewById(R.id.button_confirm_order);
+
+        mReconnectButton = view.findViewById(R.id.reset_network_button);
+        mReconnectButton.setOnClickListener(v -> {
+            if (isNetworkConnected()) {
+                showMainContent();
+            }
+        });
 
         mRecycler = view.findViewById(R.id.recycler_confirm_order);
         mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
@@ -133,11 +153,38 @@ public class OrderConfirmFragment extends Fragment {
             OrderConfirmAdapter adapter = new OrderConfirmAdapter(foodList, mRecycler);
             mRecycler.setAdapter(adapter);
 
+            if (!isNetworkConnected()) {
+                showNoNetwork();
+            } else {
+                showMainContent();
+            }
+
             mConfirmOrderButton.setOnClickListener(v -> {
-                mFirebaseService.addOrder(order);
-                Toast.makeText(getActivity(), "Order sent to server, check logcat and FirebaseConsole", Toast.LENGTH_SHORT).show();
+                if (isNetworkConnected()) {
+                    mFirebaseService.addOrder(order);
+                    Realm confirmRealm = Realm.getDefaultInstance();
+                    mRealmService.deleteOrder(confirmRealm);
+                    Toast.makeText(getActivity(), "Order sent to server, check logcat and FirebaseConsole", Toast.LENGTH_SHORT).show();
+                }
             });
 
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
+    }
+
+    private void showNoNetwork() {
+        mMainContainer.setVisibility(View.GONE);
+        mNoInternetContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showMainContent() {
+        mNoInternetContainer.setVisibility(View.GONE);
+        mMainContainer.setVisibility(View.VISIBLE);
     }
 }

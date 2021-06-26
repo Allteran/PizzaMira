@@ -20,6 +20,7 @@ import java.util.Iterator;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Realm will hold only a little part of data - current order. When user wants to make an order (a real one)
@@ -244,6 +245,13 @@ public class RealmService {
             rOrder.setChange(order.getChange());
         }
 
+        realm.commitTransaction();
+    }
+
+    public void deleteOrder(Realm realm) {
+        realm.beginTransaction();
+        RealmResults<Order> result = realm.where(Order.class).findAll();
+        result.deleteAllFromRealm();
         realm.commitTransaction();
     }
 
