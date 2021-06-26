@@ -4,13 +4,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.allteran.pizzamira.model.FirebaseFoodItem;
+import com.allteran.pizzamira.model.FirebaseOrder;
 import com.allteran.pizzamira.model.FoodItem;
 import com.allteran.pizzamira.model.Order;
 import com.allteran.pizzamira.model.Role;
 import com.allteran.pizzamira.model.User;
 import com.allteran.pizzamira.util.Const;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FirebaseService {
@@ -59,6 +60,46 @@ public class FirebaseService {
         user.setPhone(firebaseUser.getPhoneNumber());
         user.setRole(new Role(Role.ID_CUSTOMER, Role.NAME_CUSTOMER));
         mReference.child(Const.DB_TREE_USERS).child(firebaseUser.getUid()).setValue(user);
+    }
+
+    public void addOrder(Order order) {
+        //first of all we need to transfer data from Order to FirebaseOrder
+        FirebaseOrder fOrder = new FirebaseOrder();
+
+        fOrder.setId(order.getId());
+        fOrder.setUserPhone(order.getUserPhone());
+        fOrder.setCustomerFirstName(order.getCustomerFirstName());
+        fOrder.setCustomerSecondName(order.getCustomerSecondName());
+
+        List<FirebaseFoodItem> foodList = new ArrayList<>();
+        for (FoodItem item : order.getFoodList()) {
+            FirebaseFoodItem fFoodItem = new FirebaseFoodItem();
+            fFoodItem.setId(item.getId());
+            fFoodItem.setQuantity(item.getCountInCart());
+
+            foodList.add(fFoodItem);
+        }
+        fOrder.setFoodList(foodList);
+
+        fOrder.setFullPrice(order.getFullPrice());
+        fOrder.setStatus(order.getStatus());
+        fOrder.setPayType(order.getPayType());
+        fOrder.setCreationDate(new Date().toString());
+
+        fOrder.setCity(order.getCity());
+        fOrder.setStreetName(order.getStreetName());
+        fOrder.setBuildingNo(order.getBuildingNo());
+        fOrder.setEntrance(order.getEntrance());
+        fOrder.setIntercom(order.getIntercom());
+        fOrder.setAppNo(order.getAppNo());
+        fOrder.setFloorNo(order.getFloorNo());
+
+        fOrder.setNumberOfPersons(order.getNumberOfPersons());
+        fOrder.setChange(order.getChange());
+
+        fOrder.setUserComment(order.getUserComment());
+
+        mReference.child(Const.DB_TREE_ORDERS).child(fOrder.getId()).setValue(fOrder);
     }
 
     public void loadFoodList(final FoodDataStatus dataStatus) {
@@ -121,5 +162,6 @@ public class FirebaseService {
             }
         });
     }
+
 
 }

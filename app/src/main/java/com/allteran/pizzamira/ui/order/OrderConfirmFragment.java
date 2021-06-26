@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,6 +65,8 @@ public class OrderConfirmFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFirebaseService = new FirebaseService(FirebaseDatabase.getInstance());
         if (getArguments() != null) {
             //TODO: pull bundle from getArguments()
         }
@@ -95,6 +98,7 @@ public class OrderConfirmFragment extends Fragment {
         mPayment = view.findViewById(R.id.payment);
         mNumberOfPeople = view.findViewById(R.id.number_of_people);
         mCustomerComment = view.findViewById(R.id.customer_comment);
+        mConfirmOrderButton = view.findViewById(R.id.button_confirm_order);
 
         mRecycler = view.findViewById(R.id.recycler_confirm_order);
         mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 1));
@@ -128,6 +132,11 @@ public class OrderConfirmFragment extends Fragment {
             List<FoodItem> foodList = order.getFoodList();
             OrderConfirmAdapter adapter = new OrderConfirmAdapter(foodList, mRecycler);
             mRecycler.setAdapter(adapter);
+
+            mConfirmOrderButton.setOnClickListener(v -> {
+                mFirebaseService.addOrder(order);
+                Toast.makeText(getActivity(), "Order sent to server, check logcat and FirebaseConsole", Toast.LENGTH_SHORT).show();
+            });
 
         }
     }

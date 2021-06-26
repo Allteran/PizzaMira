@@ -24,10 +24,8 @@ public final class Const {
     public static final String PAY_CARD = "Карта";
 
     public static final String DB_TREE_USERS = "users";
-
-
     public static final String DB_TREE_FOODLIST_FAKE = "fake_food_list";
-    public static final String DB_TREE_CART = "users_cart";
+    public static final String DB_TREE_ORDERS = "order_list";
 
     public static final String KEY_FROM_LOGIN = "arg_activity_launch_key";
     public static final String ARG_FROM_LOGIN_TO_CART = "arg_activity_cart";
