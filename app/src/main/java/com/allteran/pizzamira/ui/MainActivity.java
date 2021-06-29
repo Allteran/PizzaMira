@@ -9,8 +9,13 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.allteran.pizzamira.R;
+import com.allteran.pizzamira.model.Order;
+import com.allteran.pizzamira.services.RealmService;
 import com.allteran.pizzamira.util.Const;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,11 +37,19 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        String fragmentArg = getIntent().getStringExtra(Const.KEY_FROM_LOGIN);
+        RealmService realmService = new RealmService();
+        Order order = realmService.getCurrentOrder(Realm.getDefaultInstance());
+        if (order == null || order.getFoodList().isEmpty()) {
+            BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_cart);
+            badge.setVisible(false, true);
+        }
 
-        if(fragmentArg != null && fragmentArg.equals(Const.ARG_FROM_LOGIN_TO_CART)) {
+        String fragmentArg = getIntent().getStringExtra(Const.KEY_FROM_LOGIN);
+        if (fragmentArg != null && fragmentArg.equals(Const.ARG_FROM_LOGIN_TO_CART)) {
             navController.navigate(R.id.navigation_cart);
         }
+
+
     }
 
 }

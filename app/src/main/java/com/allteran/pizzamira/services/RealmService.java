@@ -206,7 +206,6 @@ public class RealmService {
      * and update it when its needed
      */
     private void updateCartBadgeCount(Order order, AppCompatActivity activity) {
-        Log.d(TAG, "updateBadge: init");
         BottomNavigationView navView = activity.findViewById(R.id.nav_view);
         int badgeCount = 0;
         BadgeDrawable badge = navView.getOrCreateBadge(R.id.navigation_cart);
