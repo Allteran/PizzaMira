@@ -34,5 +34,8 @@
     <string name="label_payment">Оплата заказа</string>
     <string name="label_order_details">Детали заказа</string>
     <string name="label_order_confirmation">Подтверждение заказа</string>
+    <string name="order_sent_message">Мы приняли Ваш заказ и уже его готовим. В течении 15-ти минут с вами свяжется наш оператор для уточнения деталей и подтверждения заказа. Если этого не произошло - свяжитесь с нами по номеру +7 000 000 00 00</string>
+    <string name="order_sent_header">Ваш заказ отправлен</string>
+    <string name="button_goto_order_status">Понятно</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

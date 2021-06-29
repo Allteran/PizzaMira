@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         String fragmentArg = getIntent().getStringExtra(Const.KEY_FROM_LOGIN);
 
         if(fragmentArg != null && fragmentArg.equals(Const.ARG_FROM_LOGIN_TO_CART)) {
-            //TODO: navigate to cart (or next step from cart)
             navController.navigate(R.id.navigation_cart);
         }
     }
