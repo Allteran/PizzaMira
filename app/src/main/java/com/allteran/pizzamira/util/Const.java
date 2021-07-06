@@ -30,4 +30,5 @@ public final class Const {
     public static final String KEY_FROM_LOGIN = "arg_activity_launch_key";
     public static final String ARG_FROM_LOGIN_TO_CART = "arg_activity_cart";
     public static final String ARG_FROM_LOGIN_TO_MAIN = "arg_activity_main";
+    public static final String ARG_FROM_SENT_ORDER_TO_MENU = "arg_from_send_order_to_menu";
 }

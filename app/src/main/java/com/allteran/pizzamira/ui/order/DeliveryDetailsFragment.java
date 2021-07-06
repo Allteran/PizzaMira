@@ -235,7 +235,7 @@ public class DeliveryDetailsFragment extends Fragment {
 
                 mRealmService.updateOrderDetails(mRealm, order);
 
-                Fragment confirmOrderFragment = OrderConfirmFragment.newInstance("asd", "asds");
+                Fragment confirmOrderFragment = OrderConfirmFragment.newInstance();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.order_host_fragment, confirmOrderFragment);
                 ft.commit();

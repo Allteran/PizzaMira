@@ -16,7 +16,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -159,6 +162,25 @@ public class FirebaseService {
                 dataStatus.dataIsLoaded(user);
             } else {
                 Log.e(TAG, "finduserById: task is failed", task.getException());
+            }
+        });
+    }
+
+    public void findUserByPhone(String phone, final UserDataStatus dataStatus) {
+        Query userByPhoneQuery = mReference.child(Const.DB_TREE_USERS)
+                .equalTo(phone);
+        userByPhoneQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User user = snapshot.getValue(User.class);
+                    dataStatus.dataIsLoaded(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                dataStatus.onLoadError(error);
             }
         });
     }

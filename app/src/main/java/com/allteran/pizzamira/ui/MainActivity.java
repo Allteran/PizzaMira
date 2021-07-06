@@ -48,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentArg != null && fragmentArg.equals(Const.ARG_FROM_LOGIN_TO_CART)) {
             navController.navigate(R.id.navigation_cart);
         }
-
-
+        boolean fromSendOrder = getIntent().getBooleanExtra(Const.ARG_FROM_SENT_ORDER_TO_MENU, false);
+        if(fromSendOrder) {
+            navController.navigate(R.id.navigation_menu);
+        }
     }
 
 }

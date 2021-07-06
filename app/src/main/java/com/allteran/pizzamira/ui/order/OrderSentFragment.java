@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.allteran.pizzamira.R;
 import com.allteran.pizzamira.ui.MainActivity;
+import com.allteran.pizzamira.util.Const;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,29 +22,18 @@ public class OrderSentFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
 
     public OrderSentFragment() {
         // Required empty public constructor
     }
 
-    public static OrderSentFragment newInstance(String param1, String param2) {
-        OrderSentFragment fragment = new OrderSentFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static OrderSentFragment newInstance() {
+        return new OrderSentFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -58,6 +48,7 @@ public class OrderSentFragment extends Fragment {
         AppCompatButton gotoOrderStatusButton = view.findViewById(R.id.button_goto_order_status);
         gotoOrderStatusButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra(Const.ARG_FROM_SENT_ORDER_TO_MENU, true);
             startActivity(intent);
         });
     }

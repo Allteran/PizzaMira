@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,11 +65,8 @@ public class OrderConfirmFragment extends Fragment {
     }
 
 
-    public static OrderConfirmFragment newInstance(String param1, String param2) {
-        OrderConfirmFragment fragment = new OrderConfirmFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    public static OrderConfirmFragment newInstance() {
+        return new OrderConfirmFragment();
     }
 
     @Override
@@ -77,9 +74,7 @@ public class OrderConfirmFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mFirebaseService = new FirebaseService(FirebaseDatabase.getInstance());
-        if (getArguments() != null) {
-            //TODO: pull bundle from getArguments()
-        }
+
     }
 
     @Override
@@ -152,6 +147,13 @@ public class OrderConfirmFragment extends Fragment {
             List<FoodItem> foodList = order.getFoodList();
             OrderConfirmAdapter adapter = new OrderConfirmAdapter(foodList, mRecycler);
             mRecycler.setAdapter(adapter);
+            mReconnectButton.setOnClickListener(v -> {
+                if (!isNetworkConnected()) {
+                    showNoNetwork();
+                } else {
+                    showMainContent();
+                }
+            });
 
             if (!isNetworkConnected()) {
                 showNoNetwork();
@@ -164,7 +166,11 @@ public class OrderConfirmFragment extends Fragment {
                     mFirebaseService.addOrder(order);
                     Realm confirmRealm = Realm.getDefaultInstance();
                     mRealmService.deleteOrder(confirmRealm);
-                    Toast.makeText(getActivity(), "Order sent to server, check logcat and FirebaseConsole", Toast.LENGTH_SHORT).show();
+
+                    Fragment orderSentFragment = OrderSentFragment.newInstance();
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.order_host_fragment, orderSentFragment);
+                    ft.commit();
                 }
             });
 
