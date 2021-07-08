@@ -6,106 +6,221 @@
     android:layout_height="match_parent"
     tools:context=".ui.account.AccountFragment">
 
-    <ProgressBar
-        android:id="@+id/progress_bar_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal|center_vertical" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_countainer_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/header_background"
-            android:layout_width="match_parent"
-            android:layout_height="130dp"
-            android:background="@color/main_theme_color"
+        <ProgressBar
+            android:id="@+id/progress_bar_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/header_phone"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_countainer_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_padding"
-            android:text="+7 902 133 5276"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/header_title"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/header_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_padding"
-            android:text="Привет! Это хэдер"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title_default_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/header_background"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:id="@+id/header_background"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:background="@color/main_theme_color"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/header_second_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_padding"
-            android:text="Войти"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/header_background"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header_title" />
+            <TextView
+                android:id="@+id/header_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:text="+7 902 133 5276"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/header_title"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/order_list_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/default_padding"
-            android:paddingTop="@dimen/default_padding"
-            android:paddingEnd="@dimen/default_padding"
-            android:paddingBottom="5dp"
-            android:text="Заказы"
-            android:textSize="@dimen/title_default_size"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header_background" />
+            <TextView
+                android:id="@+id/header_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:text="Привет! Это хэдер"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title_default_size"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/header_background"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/active_orders_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="15dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="@dimen/default_padding"
-            android:paddingBottom="5dp"
-            android:text="Активные заказы"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/order_list_title" />
+            <TextView
+                android:id="@+id/header_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:text="Войти"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/header_background"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/header_title" />
 
-        <TextView
-            android:id="@+id/order_history_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="15dp"
-            android:paddingEnd="@dimen/default_padding"
-            android:paddingBottom="5dp"
-            android:text="История заказов"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/active_orders_button" />
+            <TextView
+                android:id="@+id/order_list_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/default_padding"
+                android:paddingTop="@dimen/default_padding"
+                android:paddingEnd="@dimen/default_padding"
+                android:paddingBottom="5dp"
+                android:text="Заказы"
+                android:textSize="@dimen/title_default_size"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/header_background" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/active_orders_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableStart="@drawable/ic_cooking"
+                android:drawablePadding="5dp"
+                android:padding="5dp"
+                android:text="Активные заказы"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/order_list_title" />
 
+            <View
+                android:id="@+id/order_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:padding="3dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/active_orders_button" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/order_history_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableStart="@drawable/ic_history"
+                android:drawablePadding="5dp"
+                android:padding="5dp"
+                android:text="История заказов"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/order_separator" />
+
+            <TextView
+                android:id="@+id/feedback_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:text="Есть чем поделиться?"
+                android:textSize="@dimen/title_default_size"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/order_history_button" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/email_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:text="email@mail.ru"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/feedback_title" />
+            <View
+                android:id="@+id/feedback_sep1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:padding="3dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/email_button" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/phone_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:text="+7 (123) 456 78 91"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:drawableStart="@drawable/ic_phone"
+                android:drawablePadding="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/feedback_sep1" />
+            <View
+                android:id="@+id/feedback_sep2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:padding="3dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/phone_button" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/instagram_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:text="\@pizzamira21"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:drawableStart="@drawable/ic_instagram"
+                android:drawablePadding="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/feedback_sep2" />
+            <View
+                android:id="@+id/feedback_sep3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:padding="3dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/instagram_button" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/vk_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:text="\@pizzamira"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:drawableStart="@drawable/ic_vk"
+                android:drawablePadding="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/feedback_sep3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>
